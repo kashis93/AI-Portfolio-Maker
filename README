@@ -1,0 +1,69 @@
+# 📄✨ AI Portfolio Generator
+
+Turn your resume into a breathtaking, live, glassmorphism portfolio site with Python + Generative AI magic.
+
+## 🌟 Why This?
+Zero manual editing – Resume → Premium Portfolio in 1 click!
+**LLM + NLP hybrid** – Smart extraction handles messy formats using Pydantic JSON parser.
+**Modern HTML/CSS** – Mind-blowing UI template (Dark mode, glassmorphism, dynamic animations).
+
+## ⚙️ Tech Stack
+- **LangChain** (Supporting Anthropic Claude, Groq Llama3, Ollama)
+- **Pydantic** (JSON output validation)
+- **Jinja2** (Dynamic HTML generation)
+- **pdfplumber** (PDF text extraction)
+
+---
+
+## 🚀 How to Use
+
+Follow these steps to generate your portfolio from a PDF:
+
+### Step 1: Install Dependencies
+Open your terminal in the project folder and run:
+```bash
+# Create and activate a virtual environment (recommended)
+python -m venv venv
+# Windows PowerShell:
+.\venv\Scripts\Activate.ps1
+# macOS/Linux:
+source venv/bin/activate
+
+# Install required packages
+pip install -r requirements.txt
+```
+
+### Step 2: Configure Your API Choice
+Create a `.env` file in the root directory of the project and define your preferred AI provider:
+```env
+# Choose between: "anthropic", "groq", or "ollama"
+LLM_PROVIDER=anthropic
+
+# Provide corresponding API Keys
+ANTHROPIC_API_KEY=your_anthropic_api_key_here
+GROQ_API_KEY=your_groq_api_key_here
+```
+
+### Step 3: Launch the Interactive Web App UI
+Run the Flask web server:
+```bash
+python app.py
+```
+Open `http://127.0.0.1:5000` in your web browser, drag & drop **any PDF resume**, pick your preferred template, edit details, and download your live portfolio website!
+
+Alternatively, to generate via command line:
+```bash
+python llm_extraction/main.py
+```
+> **Boom! 🎉** 
+> Your incredibly designed portfolio has been generated inside the `Here's_Your_Portfolio_Duh/` folder. Open `Your_Portfolio.html` in any web browser and prepare to be wowed!
+(Modify The Website According To Yourself, Its Not That Engaing)
+---
+
+## 💡 Key Features
+✅ **LLM-Powered Extraction** – Flawless AI reading via LangChain and Claude Sonnet/Llama-3.
+✅ **Education/Skills/Projects Detection** – Totally schema-less handling of messy layouts.
+✅ **Insanely Good Web Design** – Premium aesthetic out-of-the-box.
+
+### 🤝 Contribute & Connect
+Issues/PRs welcome! Built with Python + ❤️ – [Jayesh Vishwakarma](https://in.linkedin.com/in/cmd-jayesh)

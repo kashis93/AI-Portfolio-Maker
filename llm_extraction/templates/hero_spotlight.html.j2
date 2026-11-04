@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ Name }} — Signature Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,600;0,800;1,700&family=Space+Grotesk:wght@500;700;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg: {{ palette.bg_base if palette and palette.bg_base else '#0F0F14' }};
+            --card-bg: {{ palette.card_bg if palette and palette.card_bg else '#1A1A24' }};
+            --border: {{ palette.border_color if palette and palette.border_color else 'rgba(255, 255, 255, 0.12)' }};
+            --text-main: {{ palette.text_main if palette and palette.text_main else '#E5E5E5' }};
+            --text-heading: #FFFFFF;
+            --text-muted: #94A3B8;
+            --accent: {{ palette.accent if palette and palette.accent else '#00D9FF' }};
+            --accent-hover: {{ palette.accent_hover if palette and palette.accent_hover else '#38BDF8' }};
+            --accent-glow: {{ palette.accent_glow if palette and palette.accent_glow else 'rgba(0, 217, 255, 0.25)' }};
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.65;
+            overflow-x: hidden;
+        }
+
+        .ambient-glow {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -1;
+            pointer-events: none;
+            background: 
+                radial-gradient(circle at 50% -20%, var(--accent-glow), transparent 70%),
+                radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.03), transparent 50%);
+        }
+
+        .container {
+            max-width: 1040px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* 1. HERO SECTION */
+        .hero-section {
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 90px 0 50px;
+        }
+
+        .initial-badge {
+            width: 84px;
+            height: 84px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #6366F1);
+            padding: 3px;
+            margin-bottom: 24px;
+            box-shadow: 0 0 35px var(--accent-glow);
+        }
+
+        .initial-inner {
+            width: 100%;
+            height: 100%;
+            background: var(--bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--text-heading);
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 0.85rem;
+            color: var(--accent);
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+
+        .status-pill .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10B981;
+            box-shadow: 0 0 10px #10B981;
+        }
+
+        .hero-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 4.5rem;
+            font-weight: 900;
+            letter-spacing: -2px;
+            line-height: 1.05;
+            margin-bottom: 20px;
+            color: var(--text-heading);
+        }
+
+        .hero-tagline {
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            max-width: 680px;
+            font-weight: 400;
+            margin-bottom: 32px;
+        }
+
+        .hero-contacts {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .contact-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 22px;
+            border-radius: 100px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.88rem;
+            transition: all 0.25s ease;
+        }
+
+        .contact-btn:hover {
+            background: var(--accent);
+            color: #000;
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--accent-glow);
+        }
+
+        section {
+            padding: 60px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        section:last-of-type {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-heading);
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        /* 2. ABOUT SECTION */
+        .about-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            font-size: 1.1rem;
+            color: var(--text-main);
+            line-height: 1.7;
+        }
+
+        /* 3. EDUCATION SECTION */
+        .edu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .edu-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+        }
+
+        .edu-degree {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-heading);
+            margin-bottom: 6px;
+        }
+
+        .edu-inst {
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+
+        .edu-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* 4. EXPERIENCE SECTION */
+        .exp-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 20px;
+        }
+
+        .exp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .exp-role {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-heading);
+        }
+
+        .exp-company {
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 0.98rem;
+        }
+
+        .exp-dates {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .exp-desc {
+            color: var(--text-main);
+            font-size: 0.96rem;
+            margin-top: 10px;
+        }
+
+        /* 5. PROJECTS SECTION */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .project-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.25s ease;
+        }
+
+        .project-box:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .project-box h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.35rem;
+            color: var(--text-heading);
+            margin-bottom: 10px;
+        }
+
+        .project-desc {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            margin-bottom: 14px;
+        }
+
+        .project-bullets {
+            list-style: none;
+            margin-bottom: 16px;
+        }
+
+        .project-bullets li {
+            position: relative;
+            padding-left: 20px;
+            color: var(--text-main);
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+
+        .project-bullets li::before {
+            content: '✦';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-size: 0.75rem;
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .tech-tag {
+            font-size: 0.78rem;
+            padding: 4px 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--accent);
+        }
+
+        .project-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .btn-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            border-radius: 100px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-pill-primary {
+            background: var(--accent);
+            color: #000;
+        }
+
+        .btn-pill-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-pill-outline {
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--border);
+        }
+
+        .btn-pill-outline:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        /* 6. SKILLS GROUPED SECTION */
+        .skill-group {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+
+        .skill-cat-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-heading);
+            margin-bottom: 14px;
+        }
+
+        .skills-flex {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .skill-pill {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        /* 7. HOBBIES SECTION */
+        .hobbies-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .hobby-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 0.9rem;
+            color: var(--text-main);
+        }
+
+        .hobby-chip i {
+            color: var(--accent);
+        }
+
+        footer {
+            text-align: center;
+            padding: 50px 0 30px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Keep the spotlight confident and spacious while retaining its dark identity. */
+        .container { max-width: 1120px; }
+        .hero-section { min-height: 84vh; padding: 112px 0 72px; }
+        .hero-name { font-size: clamp(3.2rem, 8vw, 6rem); letter-spacing: -0.06em; }
+        .hero-tagline { line-height: 1.7; }
+        section { padding: 76px 0; }
+        .section-title { font-size: clamp(1.6rem, 3vw, 2.2rem); letter-spacing: -0.025em; }
+        .about-box, .timeline-item, .project-card, .skills-box {
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.16);
+        }
+        .project-card, .timeline-item { border-radius: 16px; }
+
+        @media (max-width: 768px) {
+            .hero-name { font-size: 2.8rem; }
+            .hero-tagline { font-size: 1.1rem; }
+            .hero-section { min-height: 76vh; padding: 92px 0 54px; }
+            section { padding: 54px 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient-glow"></div>
+
+    <div class="container">
+        <!-- 1. HERO SECTION -->
+        <div class="hero-section">
+            <div class="initial-badge">
+                <div class="initial-inner">{{ Name[0] if Name else 'P' }}</div>
+            </div>
+
+            <div class="status-pill">
+                <span class="dot"></span> Available for Opportunities
+            </div>
+
+            <h1 class="hero-name">{{ Name }}</h1>
+            {% if Introduction %}
+            <p class="hero-tagline">{{ Introduction }}</p>
+            {% endif %}
+
+            <div class="hero-contacts">
+                {% if Github %}
+                <a href="{{ Github }}" target="_blank" rel="noopener noreferrer" class="contact-btn">
+                    <i class="fa-brands fa-github"></i> GitHub
+                </a>
+                {% endif %}
+                {% if Linkedin %}
+                <a href="{{ Linkedin }}" target="_blank" rel="noopener noreferrer" class="contact-btn">
+                    <i class="fa-brands fa-linkedin"></i> LinkedIn
+                </a>
+                {% endif %}
+                {% if Portfolio_URL %}
+                <a href="{{ Portfolio_URL }}" target="_blank" rel="noopener noreferrer" class="contact-btn">
+                    <i class="fa-solid fa-globe"></i> Portfolio
+                </a>
+                {% endif %}
+                {% if Twitter %}
+                <a href="{{ Twitter }}" target="_blank" rel="noopener noreferrer" class="contact-btn">
+                    <i class="fa-brands fa-x-twitter"></i> Twitter
+                </a>
+                {% endif %}
+                {% if Email %}
+                <a href="mailto:{{ Email }}" class="contact-btn">
+                    <i class="fa-solid fa-envelope"></i> {{ Email }}
+                </a>
+                {% endif %}
+                {% if Phone %}
+                <span class="contact-btn">
+                    <i class="fa-solid fa-phone"></i> {{ Phone }}
+                </span>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- 2. ABOUT SECTION (GRACEFUL COLLAPSE IF EMPTY) -->
+        {% if About %}
+        <section id="about">
+            <h2 class="section-title"><i class="fa-solid fa-user-astronaut" style="color: var(--accent);"></i> About Me</h2>
+            <div class="about-box">
+                {{ About }}
+            </div>
+        </section>
+        {% endif %}
+
+        <!-- 3. EDUCATION SECTION -->
+        {% if Education and Education|length > 0 %}
+        <section id="education">
+            <h2 class="section-title"><i class="fa-solid fa-graduation-cap" style="color: var(--accent);"></i> Education</h2>
+            <div class="edu-grid">
+                {% for item in Education %}
+                <div class="edu-card">
+                    <div class="edu-degree">{{ item.degree or item.title or 'Degree' }}</div>
+                    <div class="edu-inst">{{ item.institution or item.description or 'University' }}</div>
+                    <div class="edu-meta">
+                        <span>{{ item.years or '' }}</span>
+                        {% if item.gpa %}<span>Score: {{ item.gpa }}</span>{% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
+        <!-- 4. EXPERIENCE / INTERNSHIPS (HIDDEN IF EMPTY) -->
+        {% if Experience and Experience|length > 0 %}
+        <section id="experience">
+            <h2 class="section-title"><i class="fa-solid fa-briefcase" style="color: var(--accent);"></i> Work Experience & Internships</h2>
+            {% for item in Experience %}
+            <div class="exp-card">
+                <div class="exp-header">
+                    <div>
+                        <div class="exp-role">{{ item.role }}</div>
+                        <div class="exp-company">{{ item.company }}</div>
+                    </div>
+                    {% if item.dates %}<div class="exp-dates">{{ item.dates }}</div>{% endif %}
+                </div>
+                {% if item.description %}
+                <div class="exp-desc">{{ item.description }}</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </section>
+        {% endif %}
+
+        <!-- 5. PROJECTS SECTION -->
+        {% if Projects and Projects|length > 0 %}
+        <section id="projects">
+            <h2 class="section-title"><i class="fa-solid fa-code-branch" style="color: var(--accent);"></i> Featured Projects</h2>
+            <div class="projects-grid">
+                {% for project in Projects %}
+                <div class="project-box">
+                    <div>
+                        <h3>{{ project.title }}</h3>
+                        {% if project.description %}
+                        <p class="project-desc">{{ project.description }}</p>
+                        {% endif %}
+
+                        {% if project['items'] and project['items']|length > 0 %}
+                        <ul class="project-bullets">
+                            {% for b in project['items'] %}
+                            <li>{{ b }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+
+                        {% if project['tech_stack'] and project['tech_stack']|length > 0 %}
+                        <div class="tech-tags">
+                            {% for tag in project['tech_stack'] %}
+                            <span class="tech-tag">{{ tag }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    {% if project['github_url'] or project['live_url'] %}
+                    <div class="project-actions">
+                        {% if project['github_url'] %}
+                        <a href="{{ project['github_url'] }}" target="_blank" rel="noopener noreferrer" class="btn-pill btn-pill-outline">
+                            <i class="fa-brands fa-github"></i> View Code
+                        </a>
+                        {% endif %}
+                        {% if project['live_url'] %}
+                        <a href="{{ project['live_url'] }}" target="_blank" rel="noopener noreferrer" class="btn-pill btn-pill-primary">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Live Demo
+                        </a>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
+        <!-- 6. SKILLS (CATEGORIZED OR PLAIN) -->
+        {% if SkillsGrouped and SkillsGrouped|length > 0 %}
+        <section id="skills">
+            <h2 class="section-title"><i class="fa-solid fa-bolt" style="color: var(--accent);"></i> Skills & Technical Stack</h2>
+            {% for cat in SkillsGrouped %}
+            <div class="skill-group">
+                <div class="skill-cat-title">{{ cat.category }}</div>
+                <div class="skills-flex">
+                    {% for skill in cat.skills %}
+                    <div class="skill-pill">{{ skill }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </section>
+        {% elif Skills and Skills|length > 0 %}
+        <section id="skills">
+            <h2 class="section-title"><i class="fa-solid fa-bolt" style="color: var(--accent);"></i> Skills & Technologies</h2>
+            <div class="skill-group">
+                <div class="skills-flex">
+                    {% for skill in Skills %}
+                    <div class="skill-pill">{{ skill }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        {% endif %}
+
+        <!-- 7. HOBBIES & INTERESTS (HIDDEN IF EMPTY) -->
+        {% if Hobbies and Hobbies|length > 0 %}
+        <section id="hobbies">
+            <h2 class="section-title"><i class="fa-solid fa-icons" style="color: var(--accent);"></i> Hobbies & Interests</h2>
+            <div class="hobbies-grid">
+                {% for hobby in Hobbies %}
+                <div class="hobby-chip">
+                    <i class="fa-solid fa-star"></i> {{ hobby }}
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
+        <!-- 8. FOOTER -->
+        <footer>
+            <p>© {{ Name }} — Built with AI Portfolio Maker</p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ Name }} — Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: {{ palette.bg_base if palette and palette.bg_base else '#0F0F14' }};
+            --card-bg: {{ palette.card_bg if palette and palette.card_bg else '#1A1A24' }};
+            --border-color: {{ palette.border_color if palette and palette.border_color else 'rgba(255, 255, 255, 0.12)' }};
+            --text-main: {{ palette.text_main if palette and palette.text_main else '#E5E5E5' }};
+            --text-muted: #94A3B8;
+            --accent: {{ palette.accent if palette and palette.accent else '#00D9FF' }};
+            --accent-hover: {{ palette.accent_hover if palette and palette.accent_hover else '#38BDF8' }};
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        header {
+            padding: 80px 0 45px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .profile-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(0, 217, 255, 0.1);
+            color: var(--accent);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: -1.5px;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            color: #FFFFFF;
+        }
+
+        .tagline {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            max-width: 650px;
+            margin-bottom: 30px;
+        }
+
+        .contact-bar {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .contact-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        .contact-item:hover {
+            color: var(--accent);
+        }
+
+        section {
+            padding: 50px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        section:last-of-type {
+            border-bottom: none;
+        }
+
+        h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent);
+            margin-bottom: 24px;
+        }
+
+        .project-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 20px;
+            transition: border-color 0.2s ease;
+        }
+
+        .project-card:hover {
+            border-color: var(--accent);
+        }
+
+        .project-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #FFFFFF;
+            margin-bottom: 10px;
+        }
+
+        .project-bullets {
+            list-style: none;
+            margin-bottom: 14px;
+        }
+
+        .project-bullets li {
+            position: relative;
+            padding-left: 20px;
+            color: var(--text-main);
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+        }
+
+        .project-bullets li::before {
+            content: "—";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .skill-tag {
+            padding: 6px 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: var(--text-main);
+        }
+
+        .btn-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        /* Editorial polish: calm rhythm, readable measure, and clearer hierarchy. */
+        .container { max-width: 980px; }
+        header { padding: 104px 0 56px; }
+        h1 { font-size: clamp(2.7rem, 7vw, 4.5rem); letter-spacing: -2px; }
+        .tagline { line-height: 1.65; }
+        section { padding: 64px 0; }
+        h2 { font-size: 0.82rem; letter-spacing: 0.16em; }
+        .project-card {
+            border-radius: 16px;
+            padding: 30px 32px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
+        }
+        .project-card + .project-card { margin-top: 24px; }
+        .project-title { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; }
+        .skill-tag { border-radius: 999px; padding: 6px 13px; }
+        @media (max-width: 640px) {
+            header { padding: 76px 0 42px; }
+            section { padding: 46px 0; }
+            .project-card { padding: 24px; }
+        }
+
+        .btn-pill-primary {
+            background: var(--accent);
+            color: #000;
+        }
+
+        .btn-pill-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-pill-outline {
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-pill-outline:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        footer {
+            padding: 40px 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 1. HERO SECTION -->
+        <header>
+            <span class="profile-badge">Portfolio</span>
+            <h1>{{ Name }}</h1>
+            {% if Introduction %}
+            <p class="tagline">{{ Introduction }}</p>
+            {% endif %}
+            <div class="contact-bar">
+                {% if Github %}
+                <a href="{{ Github }}" target="_blank" rel="noopener noreferrer" class="contact-item">
+                    <i class="fa-brands fa-github"></i> GitHub
+                </a>
+                {% endif %}
+                {% if Linkedin %}
+                <a href="{{ Linkedin }}" target="_blank" rel="noopener noreferrer" class="contact-item">
+                    <i class="fa-brands fa-linkedin"></i> LinkedIn
+                </a>
+                {% endif %}
+                {% if Portfolio_URL %}
+                <a href="{{ Portfolio_URL }}" target="_blank" rel="noopener noreferrer" class="contact-item">
+                    <i class="fa-solid fa-globe"></i> Portfolio
+                </a>
+                {% endif %}
+                {% if Twitter %}
+                <a href="{{ Twitter }}" target="_blank" rel="noopener noreferrer" class="contact-item">
+                    <i class="fa-brands fa-x-twitter"></i> Twitter
+                </a>
+                {% endif %}
+                {% if Email %}
+                <a href="mailto:{{ Email }}" class="contact-item">
+                    <i class="fa-solid fa-envelope"></i> {{ Email }}
+                </a>
+                {% endif %}
+                {% if Phone %}
+                <span class="contact-item">
+                    <i class="fa-solid fa-phone"></i> {{ Phone }}
+                </span>
+                {% endif %}
+            </div>
+        </header>
+
+        <!-- 2. ABOUT SECTION -->
+        {% if About %}
+        <section id="about">
+            <h2>About</h2>
+            <p style="font-size: 1.05rem; color: var(--text-main);">{{ About }}</p>
+        </section>
+        {% endif %}
+
+        <!-- 3. EDUCATION SECTION -->
+        {% if Education and Education|length > 0 %}
+        <section id="education">
+            <h2>Education</h2>
+            {% for item in Education %}
+            <div class="project-card">
+                <div class="project-title">{{ item.degree or item.title or 'Degree' }}</div>
+                <div style="color: var(--accent); margin-bottom: 8px;">{{ item.institution or item.description or 'University' }}</div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted);">
+                    <span>{{ item.years or '' }}</span>
+                    {% if item.gpa %}<span>Score: {{ item.gpa }}</span>{% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </section>
+        {% endif %}
+
+        <!-- 4. EXPERIENCE SECTION -->
+        {% if Experience and Experience|length > 0 %}
+        <section id="experience">
+            <h2>Experience</h2>
+            {% for item in Experience %}
+            <div class="project-card">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; margin-bottom: 6px;">
+                    <div>
+                        <div class="project-title" style="margin-bottom: 2px;">{{ item.role }}</div>
+                        <div style="color: var(--accent); font-weight: 600;">{{ item.company }}</div>
+                    </div>
+                    {% if item.dates %}<span style="font-size: 0.85rem; color: var(--text-muted);">{{ item.dates }}</span>{% endif %}
+                </div>
+                {% if item.description %}
+                <p style="font-size: 0.95rem; color: var(--text-main); margin-top: 8px;">{{ item.description }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </section>
+        {% endif %}
+
+        <!-- 5. PROJECTS SECTION -->
+        {% if Projects and Projects|length > 0 %}
+        <section id="projects">
+            <h2>Featured Work</h2>
+            {% for project in Projects %}
+            <div class="project-card">
+                <div class="project-title">{{ project.title }}</div>
+                {% if project.description %}
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 10px;">{{ project.description }}</p>
+                {% endif %}
+
+                {% if project['items'] and project['items']|length > 0 %}
+                <ul class="project-bullets">
+                    {% for b in project['items'] %}
+                    <li>{{ b }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                {% if project['tech_stack'] and project['tech_stack']|length > 0 %}
+                <div class="tech-tags">
+                    {% for tag in project['tech_stack'] %}
+                    <span class="skill-tag" style="font-size: 0.78rem; padding: 3px 10px;">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% if project['github_url'] or project['live_url'] %}
+                <div style="display: flex; gap: 10px; margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.06);">
+                    {% if project['github_url'] %}
+                    <a href="{{ project['github_url'] }}" target="_blank" rel="noopener noreferrer" class="btn-pill btn-pill-outline">
+                        <i class="fa-brands fa-github"></i> View Code
+                    </a>
+                    {% endif %}
+                    {% if project['live_url'] %}
+                    <a href="{{ project['live_url'] }}" target="_blank" rel="noopener noreferrer" class="btn-pill btn-pill-primary">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Live Demo
+                    </a>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </section>
+        {% endif %}
+
+        <!-- 6. SKILLS SECTION -->
+        {% if SkillsGrouped and SkillsGrouped|length > 0 %}
+        <section id="skills">
+            <h2>Skills & Technologies</h2>
+            {% for cat in SkillsGrouped %}
+            <div style="margin-bottom: 16px;">
+                <div style="font-size: 0.95rem; font-weight: 600; color: #FFF; margin-bottom: 8px;">{{ cat.category }}</div>
+                <div class="tech-tags">
+                    {% for skill in cat.skills %}
+                    <span class="skill-tag">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </section>
+        {% elif Skills and Skills|length > 0 %}
+        <section id="skills">
+            <h2>Skills & Technologies</h2>
+            <div class="tech-tags">
+                {% for skill in Skills %}
+                <span class="skill-tag">{{ skill }}</span>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
+        <!-- 7. HOBBIES SECTION -->
+        {% if Hobbies and Hobbies|length > 0 %}
+        <section id="hobbies">
+            <h2>Hobbies & Interests</h2>
+            <div class="tech-tags">
+                {% for hobby in Hobbies %}
+                <span class="skill-tag"><i class="fa-solid fa-star" style="color: var(--accent);"></i> {{ hobby }}</span>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
+        <footer>
+            <p>© {{ Name }} — Built with AI Portfolio Maker</p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ Name }} // Tech Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg: {{ palette.bg_base if palette and palette.bg_base else '#0F0F14' }};
+            --card-bg: {{ palette.card_bg if palette and palette.card_bg else '#1A1A24' }};
+            --border: {{ palette.border_color if palette and palette.border_color else 'rgba(255, 255, 255, 0.12)' }};
+            --text-main: {{ palette.text_main if palette and palette.text_main else '#E5E5E5' }};
+            --text-muted: #94A3B8;
+            --accent: {{ palette.accent if palette and palette.accent else '#00D9FF' }};
+            --accent-hover: {{ palette.accent_hover if palette and palette.accent_hover else '#38BDF8' }};
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .hero {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 45px 36px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--accent), #8B5CF6);
+        }
+
+        .terminal-header {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: var(--accent);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .terminal-header::before {
+            content: '● ● ●';
+            color: #ef4444;
+            letter-spacing: 2px;
+            font-size: 0.7rem;
+        }
+
+        h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            color: #FFFFFF;
+            margin-bottom: 12px;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin-bottom: 24px;
+        }
+
+        .socials {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .social-chip {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.82rem;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--accent);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .social-chip:hover {
+            border-color: var(--accent);
+            background: rgba(0, 217, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .section-header {
+            font-family: 'Fira Code', monospace;
+            font-size: 1.35rem;
+            color: var(--accent);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-header::before {
+            content: '>';
+            color: #8B5CF6;
+            font-weight: bold;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 30px;
+            transition: all 0.25s ease;
+        }
+
+        .card:hover {
+            border-color: var(--accent);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        .project-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #FFF;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .project-desc {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            margin-bottom: 12px;
+        }
+
+        .project-bullets {
+            list-style: none;
+            margin-bottom: 14px;
+        }
+
+        .project-bullets li {
+            position: relative;
+            padding-left: 20px;
+            color: var(--text-main);
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+
+        .project-bullets li::before {
+            content: '⚡';
+            position: absolute;
+            left: 0;
+            font-size: 0.75rem;
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .pill {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            padding: 4px 12px;
+            background: rgba(0, 217, 255, 0.08);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 6px;
+            color: var(--accent);
+        }
+
+        .project-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .btn-pill {
+            font-family: 'Fira Code', monospace;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-pill-primary {
+            background: var(--accent);
+            color: #000;
+        }
+
+        .btn-pill-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-pill-outline {
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--border);
+        }
+
+        .btn-pill-outline:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .skill-group-title {
+            font-family: 'Fira Code', monospace;
+            font-size: 1rem;
+            color: #FFF;
+            margin-bottom: 12px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            font-family: 'Fira Code', monospace;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* A sharper terminal voice with more breathing room and accessible reading measure. */
+        .container { max-width: 1120px; padding: 56px 24px; }
+        .hero { padding: 56px 44px; margin-bottom: 56px; border-radius: 18px; }
+        h1 { font-size: clamp(2.8rem, 7vw, 4.8rem); letter-spacing: -0.045em; line-height: 1.04; }
+        .tagline { line-height: 1.7; }
+        .section-header { font-size: clamp(1.15rem, 2.5vw, 1.55rem); letter-spacing: -0.01em; }
+        .card { border-radius: 14px; padding: 30px; box-shadow: 0 14px 32px rgba(0, 0, 0, 0.15); }
+        .tech-tags .tag { border-radius: 999px; }
+        @media (max-width: 640px) {
+            .container { padding: 32px 16px; }
+            .hero { padding: 32px 24px; margin-bottom: 40px; }
+            .card { padding: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 1. HERO SECTION -->
+        <div class="hero">
+            <div class="terminal-header">~/developer/portfolio --bash</div>
+            <h1>{{ Name }}</h1>
+            {% if Introduction %}
+            <p class="tagline">{{ Introduction }}</p>
+            {% endif %}
+
+            <div class="socials">
+                {% if Github %}
+                <a href="{{ Github }}" target="_blank" rel="noopener noreferrer" class="social-chip">
+                    <i class="fa-brands fa-github"></i> GitHub
+                </a>
+                {% endif %}
+                {% if Linkedin %}
+                <a href="{{ Linkedin }}" target="_blank" rel="noopener noreferrer" class="social-chip">
+                    <i class="fa-brands fa-linkedin"></i> LinkedIn
+                </a>
+                {% endif %}
+                {% if Portfolio_URL %}
+                <a href="{{ Portfolio_URL }}" target="_blank" rel="noopener noreferrer" class="social-chip">
+                    <i class="fa-solid fa-globe"></i> Portfolio
+                </a>
+                {% endif %}
+                {% if Twitter %}
+                <a href="{{ Twitter }}" target="_blank" rel="noopener noreferrer" class="social-chip">
+                    <i class="fa-brands fa-x-twitter"></i> Twitter
+                </a>
+                {% endif %}
+                {% if Email %}
+                <a href="mailto:{{ Email }}" class="social-chip">
+                    <i class="fa-solid fa-envelope"></i> {{ Email }}
+                </a>
+                {% endif %}
+                {% if Phone %}
+                <span class="social-chip">
+                    <i class="fa-solid fa-phone"></i> {{ Phone }}
+                </span>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- 2. ABOUT SECTION -->
+        {% if About %}
+        <div class="section-header">About Me</div>
+        <div class="card">
+            <p style="font-size: 1.05rem; line-height: 1.7;">{{ About }}</p>
+        </div>
+        {% endif %}
+
+        <!-- 3. EDUCATION SECTION -->
+        {% if Education and Education|length > 0 %}
+        <div class="section-header">Education</div>
+        <div class="grid-2" style="margin-bottom: 30px;">
+            {% for item in Education %}
+            <div class="card" style="margin-bottom: 0;">
+                <h3 style="color: #FFF; margin-bottom: 6px; font-size: 1.2rem;">{{ item.degree or item.title or 'Degree' }}</h3>
+                <p style="color: var(--accent); margin-bottom: 8px;">{{ item.institution or item.description or 'University' }}</p>
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted);">
+                    <span>{{ item.years or '' }}</span>
+                    {% if item.gpa %}<span>Score: {{ item.gpa }}</span>{% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- 4. EXPERIENCE SECTION -->
+        {% if Experience and Experience|length > 0 %}
+        <div class="section-header">Work Experience & Internships</div>
+        {% for item in Experience %}
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; margin-bottom: 8px;">
+                <div>
+                    <h3 style="color: #FFF; font-size: 1.25rem;">{{ item.role }}</h3>
+                    <p style="color: var(--accent); font-weight: 600;">{{ item.company }}</p>
+                </div>
+                {% if item.dates %}<span style="font-size: 0.85rem; color: var(--text-muted);">{{ item.dates }}</span>{% endif %}
+            </div>
+            {% if item.description %}
+            <p style="font-size: 0.95rem; color: var(--text-main); margin-top: 8px;">{{ item.description }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <!-- 5. PROJECTS SECTION -->
+        {% if Projects and Projects|length > 0 %}
+        <div class="section-header">Featured Projects</div>
+        <div class="grid-2">
+            {% for project in Projects %}
+            <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 0;">
+                <div>
+                    <div class="project-title">
+                        <span>{{ project.title }}</span>
+                        <i class="fa-solid fa-code" style="color: var(--accent); font-size: 0.9rem;"></i>
+                    </div>
+                    {% if project.description %}
+                    <p class="project-desc">{{ project.description }}</p>
+                    {% endif %}
+
+                    {% if project['items'] and project['items']|length > 0 %}
+                    <ul class="project-bullets">
+                        {% for b in project['items'] %}
+                        <li>{{ b }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+
+                    {% if project['tech_stack'] and project['tech_stack']|length > 0 %}
+                    <div class="tech-tags">
+                        {% for tag in project['tech_stack'] %}
+                        <span class="pill">{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                {% if project['github_url'] or project['live_url'] %}
+                <div class="project-actions">
+                    {% if project['github_url'] %}
+                    <a href="{{ project['github_url'] }}" target="_blank" rel="noopener noreferrer" class="btn-pill btn-pill-outline">
+                        <i class="fa-brands fa-github"></i> View Code
+                    </a>
+                    {% endif %}
+                    {% if project['live_url'] %}
+                    <a href="{{ project['live_url'] }}" target="_blank" rel="noopener noreferrer" class="btn-pill btn-pill-primary">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Live Demo
+                    </a>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- 6. SKILLS SECTION -->
+        {% if SkillsGrouped and SkillsGrouped|length > 0 %}
+        <div class="section-header" style="margin-top: 30px;">Skills & Tech Stack</div>
+        {% for cat in SkillsGrouped %}
+        <div class="card" style="margin-bottom: 16px;">
+            <div class="skill-group-title">// {{ cat.category }}</div>
+            <div class="tech-tags" style="margin-bottom: 0;">
+                {% for skill in cat.skills %}
+                <span class="pill">{{ skill }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+        {% elif Skills and Skills|length > 0 %}
+        <div class="section-header" style="margin-top: 30px;">Skills & Tech Stack</div>
+        <div class="card">
+            <div class="tech-tags" style="margin-bottom: 0;">
+                {% for skill in Skills %}
+                <span class="pill">{{ skill }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- 7. HOBBIES SECTION -->
+        {% if Hobbies and Hobbies|length > 0 %}
+        <div class="section-header" style="margin-top: 30px;">Hobbies & Interests</div>
+        <div class="card">
+            <div class="tech-tags" style="margin-bottom: 0;">
+                {% for hobby in Hobbies %}
+                <span class="pill" style="border-color: rgba(255,255,255,0.2); color: var(--text-main);"><i class="fa-solid fa-gamepad" style="color: var(--accent);"></i> {{ hobby }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <footer>
+            <p>// Executed successfully. Designed for {{ Name }}</p>
+        </footer>
+    </div>
+</body>
+</html>

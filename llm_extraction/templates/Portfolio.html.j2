@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ Name }} | Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: {{ palette.bg_base if palette and palette.bg_base else '#0F0F14' }};
+            --card-bg: {{ palette.card_bg if palette and palette.card_bg else '#1A1A24' }};
+            --border-glass: {{ palette.border_color if palette and palette.border_color else 'rgba(255, 255, 255, 0.125)' }};
+            --text-main: {{ palette.text_main if palette and palette.text_main else '#E5E5E5' }};
+            --text-muted: #94A3B8;
+            --accent-1: {{ palette.accent if palette and palette.accent else '#00D9FF' }};
+            --accent-2: {{ palette.accent_hover if palette and palette.accent_hover else '#38BDF8' }};
+            --glow: 0 0 40px {{ palette.accent_glow if palette and palette.accent_glow else 'rgba(0, 217, 255, 0.25)' }};
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1040px;
+            margin: 0 auto;
+            padding: 0 5%;
+        }
+
+        .glass-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Refined case-study presentation without changing template bindings. */
+        .container { max-width: 1080px; }
+        header { padding: 112px 0 58px; }
+        h1 { font-size: clamp(2.8rem, 7vw, 5rem); letter-spacing: -2px; line-height: 1.02; }
+        .hero-intro { line-height: 1.7; }
+        section { padding: 72px 0; }
+        .section-title { font-size: clamp(1.5rem, 3vw, 2.15rem); letter-spacing: -0.02em; }
+        .project-card {
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.16);
+        }
+        .project-card + .project-card { margin-top: 26px; }
+        .skill-tag { border-radius: 999px; padding: 7px 14px; }
+        @media (max-width: 640px) {
+            header { padding: 82px 0 44px; }
+            section { padding: 50px 0; }
+            .project-card { padding: 24px; }
+        }
+
+        header {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 0 40px;
+        }
+
+        .hero-card {
+            text-align: center;
+            padding: 60px 40px;
+            width: 100%;
+            max-width: 800px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+        }
+
+        .avatar-container {
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 24px;
+            border-radius: 50%;
+            padding: 3px;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+            box-shadow: var(--glow);
+        }
+
+        .avatar {
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            background: var(--bg-base);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 3.5rem;
+            color: #FFF;
+        }
+
+        h1 {
+            font-size: 3.8rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            color: #FFFFFF;
+            letter-spacing: -1px;
+        }
+
+        .hero-intro {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            font-weight: 300;
+            margin: 0 auto 28px;
+            max-width: 600px;
+        }
+
+        .contact-pills {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .contact-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 100px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-glass);
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.88rem;
+            transition: all 0.25s ease;
+        }
+
+        .contact-pill:hover {
+            background: var(--accent-1);
+            color: #000;
+            border-color: var(--accent-1);
+            transform: translateY(-2px);
+        }
+
+        section {
+            padding: 60px 0;
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+        section:last-of-type {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #FFF;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .project-card {
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.25s ease;
+        }
+
+        .project-card:hover {
+            border-color: var(--accent-1);
+            transform: translateY(-4px);
+        }
+
+        .project-header h3 {
+            font-size: 1.3rem;
+            color: #FFF;
+            margin-bottom: 8px;
+        }
+
+        .project-desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+
+        .project-bullets {
+            list-style: none;
+            margin-bottom: 14px;
+        }
+
+        .project-bullets li {
+            position: relative;
+            padding-left: 18px;
+            color: var(--text-main);
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+
+        .project-bullets li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--accent-1);
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+
+        .tech-tag {
+            font-size: 0.78rem;
+            padding: 4px 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            color: var(--accent-1);
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="glass-panel hero-card">
+                <div class="avatar-container">
+                    <div class="avatar">
+                        <i class="fa-solid fa-user-astronaut"></i>
+                    </div>
+                </div>
+                <h1>{{ Name }}</h1>
+                {% if Introduction %}
+                <p class="hero-intro">{{ Introduction }}</p>
+                {% endif %}
+                
+                <div class="contact-pills">
+                    {% if Github %}
+                    <a href="{{ Github }}" target="_blank" rel="noopener noreferrer" class="contact-pill">
+                        <i class="fa-brands fa-github"></i> GitHub
+                    </a>
+                    {% endif %}
+                    {% if Linkedin %}
+                    <a href="{{ Linkedin }}" target="_blank" rel="noopener noreferrer" class="contact-pill">
+                        <i class="fa-brands fa-linkedin"></i> LinkedIn
+                    </a>
+                    {% endif %}
+                    {% if Portfolio_URL %}
+                    <a href="{{ Portfolio_URL }}" target="_blank" rel="noopener noreferrer" class="contact-pill">
+                        <i class="fa-solid fa-globe"></i> Portfolio
+                    </a>
+                    {% endif %}
+                    {% if Twitter %}
+                    <a href="{{ Twitter }}" target="_blank" rel="noopener noreferrer" class="contact-pill">
+                        <i class="fa-brands fa-x-twitter"></i> Twitter
+                    </a>
+                    {% endif %}
+                    {% if Email %}
+                    <a href="mailto:{{ Email }}" class="contact-pill">
+                        <i class="fa-solid fa-envelope"></i> {{ Email }}
+                    </a>
+                    {% endif %}
+                    {% if Phone %}
+                    <span class="contact-pill">
+                        <i class="fa-solid fa-phone"></i> {{ Phone }}
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. ABOUT SECTION -->
+    {% if About %}
+    <section id="about">
+        <div class="container">
+            <h2 class="section-title"><i class="fa-solid fa-user-astronaut" style="color: var(--accent-1);"></i> About Me</h2>
+            <div class="glass-panel" style="padding: 30px; font-size: 1.05rem; line-height: 1.7;">
+                {{ About }}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- 3. EDUCATION SECTION -->
+    {% if Education and Education|length > 0 %}
+    <section id="education">
+        <div class="container">
+            <h2 class="section-title"><i class="fa-solid fa-graduation-cap" style="color: var(--accent-1);"></i> Education</h2>
+            <div class="projects-grid">
+                {% for item in Education %}
+                <div class="glass-panel project-card">
+                    <h3 style="color: #FFF; font-size: 1.25rem;">{{ item.degree or item.title or 'Degree' }}</h3>
+                    <div style="color: var(--accent-1); margin-bottom: 8px;">{{ item.institution or item.description or 'University' }}</div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted);">
+                        <span>{{ item.years or '' }}</span>
+                        {% if item.gpa %}<span>Score: {{ item.gpa }}</span>{% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- 4. EXPERIENCE SECTION -->
+    {% if Experience and Experience|length > 0 %}
+    <section id="experience">
+        <div class="container">
+            <h2 class="section-title"><i class="fa-solid fa-briefcase" style="color: var(--accent-1);"></i> Experience</h2>
+            {% for item in Experience %}
+            <div class="glass-panel" style="padding: 28px; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; margin-bottom: 8px;">
+                    <div>
+                        <h3 style="color: #FFF; font-size: 1.25rem;">{{ item.role }}</h3>
+                        <div style="color: var(--accent-1); font-weight: 600;">{{ item.company }}</div>
+                    </div>
+                    {% if item.dates %}<span style="font-size: 0.85rem; color: var(--text-muted);">{{ item.dates }}</span>{% endif %}
+                </div>
+                {% if item.description %}
+                <p style="font-size: 0.95rem; color: var(--text-main); margin-top: 8px;">{{ item.description }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- 5. PROJECTS SECTION -->
+    {% if Projects and Projects|length > 0 %}
+    <section id="projects">
+        <div class="container">
+            <h2 class="section-title"><i class="fa-solid fa-code-branch" style="color: var(--accent-1);"></i> Featured Work</h2>
+            <div class="projects-grid">
+                {% for project in Projects %}
+                <div class="glass-panel project-card">
+                    <div>
+                        <div class="project-header">
+                            <h3>{{ project.title }}</h3>
+                        </div>
+                        {% if project.description %}
+                        <p class="project-desc">{{ project.description }}</p>
+                        {% endif %}
+
+                        {% if project['items'] and project['items']|length > 0 %}
+                        <ul class="project-bullets">
+                            {% for b in project['items'] %}
+                            <li>{{ b }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+
+                        {% if project['tech_stack'] and project['tech_stack']|length > 0 %}
+                        <div class="tech-tags">
+                            {% for tag in project['tech_stack'] %}
+                            <span class="tech-tag">{{ tag }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    {% if project['github_url'] or project['live_url'] %}
+                    <div style="display: flex; gap: 10px; margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.08);">
+                        {% if project['github_url'] %}
+                        <a href="{{ project['github_url'] }}" target="_blank" rel="noopener noreferrer" class="contact-pill" style="padding: 6px 14px; font-size: 0.8rem;">
+                            <i class="fa-brands fa-github"></i> View Code
+                        </a>
+                        {% endif %}
+                        {% if project['live_url'] %}
+                        <a href="{{ project['live_url'] }}" target="_blank" rel="noopener noreferrer" class="contact-pill" style="padding: 6px 14px; font-size: 0.8rem; border-color: var(--accent-1); color: var(--accent-1);">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Live Demo
+                        </a>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- 6. SKILLS SECTION -->
+    {% if SkillsGrouped and SkillsGrouped|length > 0 %}
+    <section id="skills">
+        <div class="container">
+            <h2 class="section-title"><i class="fa-solid fa-bolt" style="color: var(--accent-1);"></i> Skills & Stack</h2>
+            {% for cat in SkillsGrouped %}
+            <div class="glass-panel" style="padding: 24px; margin-bottom: 16px;">
+                <h3 style="color: #FFF; font-size: 1.05rem; margin-bottom: 12px;">{{ cat.category }}</h3>
+                <div class="tech-tags" style="margin-bottom: 0;">
+                    {% for skill in cat.skills %}
+                    <span class="tech-tag" style="padding: 6px 14px; font-size: 0.88rem;">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% elif Skills and Skills|length > 0 %}
+    <section id="skills">
+        <div class="container">
+            <h2 class="section-title"><i class="fa-solid fa-bolt" style="color: var(--accent-1);"></i> Skills & Stack</h2>
+            <div class="glass-panel" style="padding: 24px;">
+                <div class="tech-tags" style="margin-bottom: 0;">
+                    {% for skill in Skills %}
+                    <span class="tech-tag" style="padding: 6px 14px; font-size: 0.88rem;">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- 7. HOBBIES SECTION -->
+    {% if Hobbies and Hobbies|length > 0 %}
+    <section id="hobbies">
+        <div class="container">
+            <h2 class="section-title"><i class="fa-solid fa-icons" style="color: var(--accent-1);"></i> Hobbies & Interests</h2>
+            <div class="contact-pills" style="justify-content: flex-start;">
+                {% for hobby in Hobbies %}
+                <span class="contact-pill"><i class="fa-solid fa-star"></i> {{ hobby }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- 8. FOOTER -->
+    <footer>
+        <div class="container">
+            <p>© {{ Name }} — Designed & Generated by AI Portfolio Maker</p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,2628 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Portfolio Maker — Resume to Stunning Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <style>
+        /* =================================================================
+           THEME TOKENS
+           ================================================================= */
+        :root[data-theme="dark"] {
+            --bg:           #0a0814;
+            --bg-2:         #110d24;
+            --bg-3:         #171233;
+            --bg-grad:      radial-gradient(circle at 20% 0%, rgba(124, 58, 237, 0.18), transparent 50%),
+                            radial-gradient(circle at 90% 100%, rgba(236, 72, 153, 0.12), transparent 50%),
+                            #0a0814;
+            --panel:        rgba(255, 255, 255, 0.04);
+            --panel-2:      rgba(255, 255, 255, 0.06);
+            --panel-3:      rgba(255, 255, 255, 0.09);
+            --border:       rgba(255, 255, 255, 0.10);
+            --border-subtle:rgba(255, 255, 255, 0.06);
+            --text:         #f5f3ff;
+            --text-muted:   rgba(245, 243, 255, 0.70);
+            --text-dim:     rgba(245, 243, 255, 0.45);
+            --accent:       #a78bfa;
+            --accent-2:     #7c3aed;
+            --accent-3:     #ec4899;
+            --grad-1:       linear-gradient(135deg, #a78bfa 0%, #7c3aed 50%, #ec4899 100%);
+            --grad-2:       linear-gradient(135deg, #7c3aed 0%, #4c1d95 100%);
+            --grad-accent:  linear-gradient(135deg, #a78bfa 0%, #ec4899 100%);
+            --success:      #10b981;
+            --warning:      #f59e0b;
+            --danger:       #ef4444;
+            --card-shadow:  0 20px 50px rgba(0, 0, 0, 0.45);
+            --glow:         0 0 35px rgba(124, 58, 237, 0.45);
+            --code-1:       rgba(167, 139, 250, 0.55);
+            --code-2:       rgba(124, 58, 237, 0.6);
+            --code-3:       rgba(236, 72, 153, 0.5);
+        }
+        :root[data-theme="light"] {
+            --bg:           #faf9ff;
+            --bg-2:         #f3effe;
+            --bg-3:         #e9e2fb;
+            --bg-grad:      radial-gradient(circle at 20% 0%, rgba(167, 139, 250, 0.20), transparent 50%),
+                            radial-gradient(circle at 90% 100%, rgba(236, 72, 153, 0.12), transparent 50%),
+                            #faf9ff;
+            --panel:        rgba(255, 255, 255, 0.90);
+            --panel-2:      rgba(255, 255, 255, 0.96);
+            --panel-3:      #ffffff;
+            --border:       rgba(124, 58, 237, 0.18);
+            --border-subtle:rgba(124, 58, 237, 0.10);
+            --text:         #1a1437;
+            --text-muted:   #4a3d75;
+            --text-dim:     #7a6da3;
+            --accent:       #6d28d9;
+            --accent-2:     #5b21b6;
+            --accent-3:     #be185d;
+            --grad-1:       linear-gradient(135deg, #6d28d9 0%, #5b21b6 50%, #be185d 100%);
+            --grad-2:       linear-gradient(135deg, #5b21b6 0%, #4c1d95 100%);
+            --grad-accent:  linear-gradient(135deg, #6d28d9 0%, #be185d 100%);
+            --success:      #059669;
+            --warning:      #d97706;
+            --danger:       #dc2626;
+            --card-shadow:  0 12px 32px rgba(124, 58, 237, 0.12);
+            --glow:         0 0 30px rgba(124, 58, 237, 0.25);
+            --code-1:       rgba(109, 40, 217, 0.40);
+            --code-2:       rgba(91, 33, 182, 0.50);
+            --code-3:       rgba(190, 24, 93, 0.40);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-grad);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* ===== Animated Background ===== */
+        #bg {
+            position: fixed; inset: 0; z-index: -2;
+            overflow: hidden; pointer-events: none;
+        }
+        .float {
+            position: absolute;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            user-select: none; pointer-events: none;
+            animation: float 40s linear infinite;
+            text-shadow: 0 0 10px var(--code-1);
+            transition: color 0.4s, text-shadow 0.4s;
+        }
+        .b-bin   { font-size: 26px; color: var(--code-2); font-weight: 700; }
+        .b-num   { font-size: 22px; color: var(--code-1); }
+        .b-brk   { font-size: 36px; color: var(--code-3); }
+        .b-key   { font-size: 20px; color: var(--code-2); font-weight: 700; }
+        .b-var   { font-size: 19px; color: var(--code-1); font-style: italic; }
+        .b-sym   { font-size: 24px; color: var(--code-3); }
+
+        @keyframes float {
+            0%   { transform: translateY(105vh) rotate(0deg) scale(0.85); opacity: 0; }
+            10%  { opacity: 1; }
+            50%  { transform: translateY(50vh) rotate(180deg) scale(1.05); opacity: 0.85; }
+            90%  { opacity: 1; }
+            100% { transform: translateY(-120px) rotate(360deg) scale(0.85); opacity: 0; }
+        }
+
+        /* ===== Landing Navbar ===== */
+        #landingNav {
+            position: sticky; top: 0; z-index: 50;
+            background: var(--bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-inner {
+            max-width: 1280px; margin: 0 auto;
+            padding: 0 1.5rem; height: 64px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .brand {
+            display: flex; align-items: center; gap: 0.75rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 800; font-size: 1.25rem;
+        }
+        .brand .logo {
+            width: 36px; height: 36px;
+            background: var(--grad-1);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 1rem;
+            box-shadow: var(--glow);
+        }
+        .brand .brand-text {
+            background: var(--grad-1);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-actions { display: flex; gap: 0.6rem; align-items: center; }
+        .icon-btn {
+            width: 40px; height: 40px;
+            border: 1px solid var(--border);
+            background: var(--panel);
+            color: var(--text);
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .icon-btn:hover { color: var(--accent); border-color: var(--accent); transform: translateY(-1px); }
+        .icon-btn .fa-sun { display: none; }
+        :root[data-theme="light"] .icon-btn .fa-sun  { display: inline; }
+        :root[data-theme="light"] .icon-btn .fa-moon { display: none; }
+
+        /* ===== Core Layout & View Transitions ===== */
+        main {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .view { display: none; }
+        .view.active { display: block; }
+
+        /* When inside workspace: Completely hide navbar and animated background, fill 100% viewport */
+        body.in-workspace {
+            overflow: hidden !important;
+            height: 100vh !important;
+            width: 100vw !important;
+        }
+        body.in-workspace #landingNav {
+            display: none !important;
+        }
+        body.in-workspace #bg {
+            display: none !important;
+        }
+        body.in-workspace main {
+            height: 100vh !important;
+            width: 100vw !important;
+            overflow: hidden !important;
+        }
+        body.in-workspace #workspaceView {
+            height: 100vh !important;
+            width: 100vw !important;
+            display: flex !important;
+            flex-direction: column !important;
+            overflow: hidden !important;
+        }
+
+        /* ===== Landing Page Hero ===== */
+        #landingView {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem 5rem;
+        }
+        .hero-wrap {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 3.5rem;
+            align-items: center;
+            min-height: calc(100vh - 180px);
+        }
+        .hero-left h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.4rem, 5vw, 4.2rem);
+            font-weight: 800;
+            line-height: 1.08;
+            margin-bottom: 1.25rem;
+            letter-spacing: -0.03em;
+        }
+        .hero-left h1 .grad {
+            background: var(--grad-1);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-left .lede {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            max-width: 540px;
+            line-height: 1.7;
+        }
+        .hero-cta { display: flex; gap: 0.9rem; flex-wrap: wrap; margin-bottom: 2.2rem; }
+        .btn {
+            display: inline-flex;
+            align-items: center; justify-content: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.4rem;
+            border: 1px solid transparent;
+            border-radius: 11px;
+            font-family: inherit;
+            font-weight: 600; font-size: 0.92rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            white-space: nowrap;
+        }
+        .btn-sm {
+            padding: 0.45rem 0.85rem;
+            font-size: 0.82rem;
+            border-radius: 8px;
+        }
+        .btn-primary {
+            background: var(--grad-1);
+            color: #fff;
+            box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(124, 58, 237, 0.55);
+            color: #fff;
+        }
+        .btn-ghost {
+            background: var(--panel);
+            color: var(--text);
+            border-color: var(--border);
+        }
+        .btn-ghost:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: var(--panel-2);
+            transform: translateY(-1px);
+        }
+
+        .feature-row { display: flex; gap: 1.4rem; flex-wrap: wrap; color: var(--text-muted); font-size: 0.9rem; }
+        .feature-row > div { display: flex; align-items: center; gap: 0.45rem; }
+        .feature-row i { color: var(--accent); }
+
+        .hero-right {
+            position: relative;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2.4rem;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: var(--card-shadow);
+        }
+        .hero-right h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.35rem;
+            margin-bottom: 0.35rem;
+        }
+        .hero-right p.muted { color: var(--text-muted); font-size: 0.92rem; margin-bottom: 1.4rem; }
+
+        .dropzone {
+            border: 2px dashed var(--border);
+            border-radius: 18px;
+            padding: 2.8rem 1.4rem;
+            text-align: center;
+            background: var(--panel-2);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .dropzone:hover, .dropzone.drag {
+            border-color: var(--accent);
+            background: var(--panel);
+            transform: scale(1.01);
+            box-shadow: var(--glow);
+        }
+        .dropzone .ico {
+            width: 68px; height: 68px;
+            border-radius: 50%;
+            background: var(--grad-1);
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 1.6rem;
+            margin: 0 auto 0.9rem;
+            box-shadow: var(--glow);
+        }
+        .dropzone h4 { font-size: 1.15rem; margin-bottom: 0.4rem; font-weight: 700; }
+        .dropzone .browse { color: var(--accent); font-weight: 700; }
+        .dropzone .hint { color: var(--text-dim); font-size: 0.85rem; margin-top: 0.35rem; }
+
+        .file-card {
+            display: none;
+            align-items: center; gap: 0.8rem;
+            margin-top: 1rem;
+            padding: 0.85rem 1.1rem;
+            background: var(--panel-2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+        .file-card .ico-sm {
+            width: 40px; height: 40px;
+            background: var(--grad-1);
+            border-radius: 9px;
+            color: #fff; display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem;
+        }
+        .file-card .name { flex: 1; font-size: 0.92rem; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .file-card .size { color: var(--text-dim); font-size: 0.8rem; }
+
+        .provider-pill {
+            display: inline-flex; align-items: center; gap: 0.45rem;
+            padding: 0.35rem 0.8rem;
+            border-radius: 999px;
+            background: var(--panel-2);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-top: 1.1rem;
+        }
+        .provider-pill .dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 8px var(--success);
+        }
+        .provider-pill.warn .dot { background: var(--warning); box-shadow: 0 0 8px var(--warning); }
+
+        /* =================================================================
+           WORKSPACE HEADER / SLIM UTILITY BAR (No Landing Navbar!)
+           ================================================================= */
+        .workspace-bar {
+            height: 52px;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1rem;
+            gap: 0.75rem;
+            z-index: 100;
+            flex-shrink: 0;
+            user-select: none;
+        }
+        .ws-left {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            min-width: 0;
+        }
+        .ws-back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.4rem 0.75rem;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .ws-back-btn:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+            background: var(--panel-2);
+        }
+        .ws-title-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--text);
+            max-width: 220px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .ws-title-badge i { color: var(--accent); }
+        .ws-provider-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 999px;
+            background: var(--panel-2);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.72rem;
+            white-space: nowrap;
+        }
+        .ws-provider-pill .dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 6px var(--success);
+        }
+
+        /* Center Main Tab Pill Switcher */
+        .ws-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+        }
+        .tab-pill-group {
+            display: inline-flex;
+            align-items: center;
+            background: var(--bg-2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 3px;
+            gap: 3px;
+        }
+        .tab-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.42rem 1rem;
+            border: 1px solid transparent;
+            border-radius: 9px;
+            background: transparent;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .tab-btn:hover {
+            color: var(--text);
+            background: var(--panel-2);
+        }
+        .tab-btn.active {
+            background: var(--grad-1);
+            color: #ffffff;
+            box-shadow: 0 2px 12px rgba(124, 58, 237, 0.4);
+            font-weight: 700;
+        }
+        .tab-btn i { font-size: 0.9rem; }
+
+        /* Right Actions */
+        .ws-right {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            flex-shrink: 0;
+        }
+        .ws-select-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .ws-select-wrap i {
+            position: absolute;
+            left: 10px;
+            pointer-events: none;
+            color: var(--accent);
+            font-size: 0.8rem;
+        }
+        .ws-select {
+            padding: 0.42rem 0.8rem 0.42rem 1.9rem;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .ws-select:hover, .ws-select:focus { border-color: var(--accent); background: var(--panel-2); }
+        .ws-select option { background: var(--bg-2); color: var(--text); }
+
+        .ws-action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.42rem 0.8rem;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: var(--panel);
+            color: var(--text);
+            font-family: inherit;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .ws-action-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: var(--panel-2);
+        }
+
+        /* =================================================================
+           WORKSPACE CONTENT AREA & PANES
+           ================================================================= */
+        .workspace-content {
+            flex: 1;
+            width: 100vw;
+            height: calc(100vh - 52px);
+            overflow: hidden;
+            position: relative;
+        }
+        .ws-pane {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+        }
+        .ws-pane.active {
+            display: flex;
+        }
+
+        /* =================================================================
+           TAB 1: LIVE PREVIEW (Bigger, Full-Screen, Edge-to-Edge)
+           ================================================================= */
+        #panePreview {
+            flex-direction: column;
+            background: var(--bg-2);
+            position: relative;
+        }
+        .preview-floating-bar {
+            position: absolute;
+            top: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.35rem 0.65rem;
+            background: rgba(14, 11, 26, 0.82);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            box-shadow: 0 10px 32px rgba(0, 0, 0, 0.45);
+            transition: opacity 0.2s;
+        }
+        :root[data-theme="light"] .preview-floating-bar {
+            background: rgba(255, 255, 255, 0.88);
+            box-shadow: 0 10px 32px rgba(124, 58, 237, 0.15);
+        }
+        .pf-group {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .pf-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.32rem 0.65rem;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 999px;
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .pf-btn:hover {
+            color: var(--text);
+            background: var(--panel-2);
+        }
+        .pf-btn.active {
+            background: var(--grad-1);
+            color: #ffffff;
+            font-weight: 700;
+        }
+        .pf-divider {
+            width: 1px;
+            height: 18px;
+            background: var(--border);
+            margin: 0 0.25rem;
+        }
+        .pf-icon-btn {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 50%;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.82rem;
+            transition: all 0.2s;
+        }
+        .pf-icon-btn:hover {
+            color: var(--accent);
+            background: var(--panel-2);
+            border-color: var(--border);
+        }
+        .pf-edit-shortcut {
+            background: var(--panel-2);
+            color: var(--accent);
+            border-color: var(--border);
+        }
+        .pf-edit-shortcut:hover {
+            border-color: var(--accent);
+            color: #fff;
+            background: var(--accent-2);
+        }
+
+        .preview-frame-wrap {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-2);
+            position: relative;
+            overflow: hidden;
+            padding: 0;
+            margin: 0;
+        }
+        #previewFrame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #ffffff;
+            transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), height 0.3s, border-radius 0.3s, box-shadow 0.3s;
+        }
+        /* Mode Responsive styling */
+        .preview-frame-wrap.mode-desktop #previewFrame {
+            width: 100%;
+            height: 100%;
+            border-radius: 0;
+            box-shadow: none;
+        }
+        .preview-frame-wrap.mode-tablet #previewFrame {
+            width: 768px;
+            height: calc(100% - 36px);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+        }
+        .preview-frame-wrap.mode-mobile #previewFrame {
+            width: 390px;
+            height: calc(100% - 36px);
+            border-radius: 28px;
+            border: 3px solid var(--border);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.55);
+        }
+
+        /* =================================================================
+           TAB 2: CODE VIEW (Full HTML Code, Copy, Download)
+           ================================================================= */
+        #paneCode {
+            flex-direction: column;
+            background: #0d0b1a;
+            color: #f5f3ff;
+            height: 100%;
+        }
+        .code-header-bar {
+            padding: 0.65rem 1.25rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-shrink: 0;
+        }
+        .code-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            font-size: 0.85rem;
+        }
+        .code-file-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            font-weight: 700;
+            color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .code-stats-pill {
+            padding: 0.2rem 0.55rem;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-dim);
+            font-size: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .code-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .code-body-wrap {
+            flex: 1;
+            overflow: auto;
+            display: flex;
+            background: #090714;
+            position: relative;
+        }
+        .code-gutter {
+            padding: 1.2rem 0.6rem 1.2rem 1rem;
+            color: rgba(255, 255, 255, 0.25);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            line-height: 1.6;
+            text-align: right;
+            user-select: none;
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(0, 0, 0, 0.25);
+        }
+        .code-pre {
+            margin: 0;
+            padding: 1.2rem 1.5rem;
+            flex: 1;
+            overflow-x: auto;
+            background: transparent !important;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.84rem;
+            line-height: 1.6;
+            color: #e2e8f0;
+        }
+        .code-pre code {
+            font-family: inherit !important;
+            background: transparent !important;
+        }
+
+        /* =================================================================
+           TAB 3: EDIT DETAILS (Spacious, Organized, No Wasted Space)
+           ================================================================= */
+        #paneEdit {
+            flex-direction: row;
+            background: var(--bg);
+            height: 100%;
+            overflow: hidden;
+        }
+        .edit-sidebar {
+            width: 250px;
+            border-right: 1px solid var(--border);
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            padding: 1rem 0.75rem;
+            flex-shrink: 0;
+            overflow-y: auto;
+            gap: 0.3rem;
+            user-select: none;
+        }
+        .edit-sidebar-title {
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            padding: 0.4rem 0.75rem 0.6rem;
+        }
+        .edit-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            padding: 0.55rem 0.85rem;
+            border-radius: 9px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.84rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .edit-nav-item i {
+            width: 18px;
+            text-align: center;
+            color: var(--accent);
+            font-size: 0.88rem;
+        }
+        .edit-nav-item:hover {
+            color: var(--text);
+            background: var(--panel-2);
+            transform: translateX(2px);
+        }
+        .edit-nav-item.active {
+            color: #ffffff;
+            background: var(--grad-1);
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.35);
+        }
+        .edit-nav-item.active i { color: #ffffff; }
+
+        .edit-sidebar-footer {
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .edit-scroll-body {
+            flex: 1;
+            height: 100%;
+            overflow-y: auto;
+            padding: 2rem 3rem 6rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Edit Form Sections */
+        .edit-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 1.8rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--card-shadow);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .sec-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.4rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .sec-head h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .sec-head h3 i { color: var(--accent); font-size: 1.15rem; }
+        .sec-head p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Form Grids */
+        .form-grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        .form-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group:last-child { margin-bottom: 0; }
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 0.4rem;
+            letter-spacing: 0.02em;
+        }
+        .form-group label i { margin-right: 0.35rem; color: var(--accent); }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 0.72rem 0.9rem;
+            background: var(--panel-2);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 0.88rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            border-color: var(--accent);
+            background: var(--panel);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.18);
+        }
+        .form-group input::placeholder, .form-group textarea::placeholder {
+            color: var(--text-dim);
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+            line-height: 1.5;
+        }
+
+        /* Template Grid in Edit Details */
+        .template-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.9rem;
+            margin-top: 0.8rem;
+        }
+        .tpl-card {
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.1rem;
+            background: var(--panel-2);
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+        .tpl-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+        }
+        .tpl-card.active {
+            border-color: var(--accent);
+            background: var(--panel);
+            box-shadow: 0 0 0 2px var(--accent);
+        }
+        .tpl-card .badge {
+            align-self: flex-start;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: var(--grad-1);
+            color: #fff;
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+        .tpl-card h5 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+        .tpl-card p {
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            line-height: 1.45;
+        }
+
+        /* Hue & Swatches */
+        .hue-slider-wrap {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 0.6rem;
+        }
+        .hue-slider-wrap input[type=range] {
+            flex: 1;
+            accent-color: var(--accent);
+            cursor: pointer;
+            height: 6px;
+        }
+        .hue-val-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--accent);
+            min-width: 35px;
+            text-align: right;
+        }
+        .color-swatches {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+            flex-wrap: wrap;
+        }
+        .swatch-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .swatch-btn:hover {
+            transform: scale(1.15);
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        /* Theme Toggle Row in Edit Tab */
+        .theme-toggle-row {
+            display: flex;
+            gap: 0.6rem;
+            margin-top: 0.6rem;
+        }
+        .theme-pill-btn {
+            flex: 1;
+            padding: 0.65rem 1rem;
+            border: 1px solid var(--border);
+            background: var(--panel-2);
+            color: var(--text);
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.45rem;
+            transition: all 0.2s;
+        }
+        .theme-pill-btn.active {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: var(--panel);
+            box-shadow: 0 0 0 1px var(--accent);
+        }
+
+        /* Items List (Experience & Projects) */
+        .items-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.1rem;
+            margin-bottom: 1.1rem;
+        }
+        .item-card {
+            background: var(--bg-2);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.25rem 1.4rem;
+            position: relative;
+            transition: border-color 0.2s;
+        }
+        .item-card:hover { border-color: rgba(167, 139, 250, 0.4); }
+        .item-card-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.9rem;
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .item-del-btn {
+            background: transparent;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        .item-del-btn:hover { background: rgba(239, 68, 68, 0.15); transform: scale(1.05); }
+
+        .add-block-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--panel-2);
+            color: var(--accent);
+            border: 1px dashed var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+        .add-block-btn:hover {
+            border-color: var(--accent);
+            background: var(--panel);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+        /* Interactive Skills Pills */
+        .skills-pills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            min-height: 40px;
+            padding: 0.5rem;
+            background: var(--bg-2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+        .skill-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.35rem 0.75rem;
+            background: var(--panel-3);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text);
+            transition: all 0.2s;
+        }
+        .skill-chip:hover { border-color: var(--accent); }
+        .skill-chip .remove-chip {
+            cursor: pointer;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+        }
+        .skill-chip .remove-chip:hover { color: var(--danger); }
+        .skill-add-row {
+            display: flex;
+            gap: 0.6rem;
+            align-items: center;
+        }
+        .skill-add-row input { flex: 1; }
+
+        /* Missing Banner */
+        .missing-banner {
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            color: var(--warning);
+            padding: 1.1rem 1.4rem;
+            border-radius: 14px;
+            margin-bottom: 2rem;
+            display: none;
+        }
+        .missing-banner h6 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.5rem; }
+        .missing-banner p { font-size: 0.84rem; color: var(--text-muted); margin-bottom: 0.6rem; }
+        .missing-banner .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+        .missing-banner .chip {
+            padding: 3px 9px;
+            background: rgba(245, 158, 11, 0.2);
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #fde68a;
+        }
+
+        /* In-flow action bar keeps editor feedback visible without covering fields. */
+        .edit-bottom-bar {
+            position: relative;
+            background: var(--panel-2);
+            border-top: 1px solid var(--border);
+            padding: 0.85rem 1.8rem;
+            margin: 2rem 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            border-radius: 14px;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+        }
+        :root[data-theme="light"] .edit-bottom-bar {
+            background: var(--panel-2);
+            box-shadow: 0 10px 24px rgba(124, 58, 237, 0.08);
+        }
+        .edit-bottom-bar .live-sync {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .edit-bottom-bar .live-sync .pulse-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 8px var(--success);
+        }
+        .edit-bottom-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+        }
+
+        /* =================================================================
+           TAB 4: SPLIT VIEW (Side-by-Side: Edit Left, Preview Right)
+           ================================================================= */
+        #paneSplit {
+            display: none;
+            width: 100%;
+            height: 100%;
+            grid-template-columns: minmax(420px, 460px) 1fr;
+            overflow: hidden;
+        }
+        #paneSplit.active {
+            display: grid;
+        }
+        .split-edit-col {
+            border-right: 1px solid var(--border);
+            background: var(--bg);
+            height: 100%;
+            overflow-y: auto;
+            padding: 1.25rem 1.4rem 4rem;
+        }
+        .split-preview-col {
+            height: 100%;
+            background: var(--bg-2);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+        #splitPreviewFrame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #fff;
+        }
+
+        /* =================================================================
+           LOADER & TOAST
+           ================================================================= */
+        .loader-overlay {
+            display: none;
+            position: fixed; inset: 0; z-index: 200;
+            background: rgba(10, 8, 20, 0.85);
+            backdrop-filter: blur(8px);
+            align-items: center; justify-content: center;
+            flex-direction: column; gap: 1rem;
+        }
+        .loader-overlay.show { display: flex; }
+        .spinner {
+            width: 48px; height: 48px;
+            border: 4px solid rgba(167, 139, 250, 0.2);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loader-overlay h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.25rem; font-weight: 700; }
+        .loader-overlay p  { color: var(--text-muted); font-size: 0.92rem; }
+
+        .toast {
+            position: fixed; bottom: 24px; right: 24px; z-index: 300;
+            padding: 0.9rem 1.25rem;
+            background: var(--panel-2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            display: none;
+            max-width: 360px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            backdrop-filter: blur(12px);
+        }
+        .toast.show { display: flex; align-items: center; gap: 0.65rem; animation: fadeUp 0.3s; }
+        .toast.success { border-color: var(--success); }
+        .toast.error   { border-color: var(--danger); }
+        .toast i.success-i { color: var(--success); font-size: 1.1rem; }
+        .toast i.error-i   { color: var(--danger); font-size: 1.1rem; }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 1024px) {
+            .hero-wrap { grid-template-columns: 1fr; gap: 2.5rem; }
+            .edit-sidebar { width: 200px; }
+            .edit-scroll-body { padding: 1.5rem 1.5rem 5rem; }
+            #paneSplit { grid-template-columns: 1fr; }
+            .split-preview-col { display: none; }
+        }
+        @media (max-width: 768px) {
+            .workspace-bar {
+                height: auto;
+                min-height: 52px;
+                padding: 0.45rem 0.6rem;
+                flex-wrap: wrap;
+                align-content: center;
+                overflow: hidden;
+            }
+            .ws-left { flex: 1 1 auto; min-width: 0; }
+            .ws-right {
+                flex: 0 1 auto;
+                min-width: 0;
+                max-width: 52%;
+                gap: 0.35rem;
+                overflow: hidden;
+            }
+            .ws-center {
+                order: 3;
+                flex: 1 0 100%;
+                min-width: 0;
+                justify-content: flex-start;
+                overflow-x: auto;
+                padding-top: 0.25rem;
+            }
+            .ws-select-wrap { display: none; }
+            .tab-btn span { display: none; }
+            .tab-btn { padding: 0.45rem 0.65rem; }
+            .ws-title-badge { display: none; }
+            .ws-provider-pill { display: none; }
+            .ws-action-btn span { display: none; }
+            .ws-action-btn, .ws-right > .btn { padding: 0.42rem 0.6rem; }
+            .ws-right > .btn span { display: none; }
+            .edit-sidebar { display: none; }
+            .edit-scroll-body { padding: 1rem 1rem 5rem; }
+            .form-grid-2, .form-grid-3 { grid-template-columns: 1fr; }
+            .edit-card { padding: 1.25rem; }
+            .edit-bottom-bar {
+                margin: 1.5rem 0 0;
+                padding: 0.75rem 1rem;
+                flex-wrap: wrap;
+            }
+            .edit-bottom-bar .live-sync span { display: none; }
+            .edit-bottom-actions {
+                width: 100%;
+                min-width: 0;
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 0.45rem;
+            }
+            .edit-bottom-actions .btn {
+                min-width: 0;
+                width: 100%;
+                padding-inline: 0.45rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+        @media (max-width: 420px) {
+            .ws-right { max-width: 48%; }
+            .ws-right .icon-btn { flex: 0 0 34px; }
+            .edit-bottom-actions { grid-template-columns: 1fr; }
+            .edit-bottom-actions .btn { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <div id="bg" aria-hidden="true"></div>
+
+    <!-- LANDING NAVBAR (Hidden automatically when in workspace!) -->
+    <nav id="landingNav">
+        <div class="nav-inner">
+            <div class="brand">
+                <div class="logo"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                <span class="brand-text">AI Portfolio Maker</span>
+            </div>
+            <div class="nav-actions">
+                <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme">
+                    <i class="fa-solid fa-moon"></i>
+                    <i class="fa-solid fa-sun"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- ==========================================
+             LANDING VIEW
+             ========================================== -->
+        <section id="landingView" class="view active">
+            <div class="hero-wrap">
+                <div class="hero-left">
+                    <h1>Your resume.<br><span class="grad">A stunning portfolio.</span><br>In seconds.</h1>
+                    <p class="lede">
+                        Drop your PDF resume, and our AI instantly crafts an interactive, responsive portfolio website
+                        with live preview, source code inspection, customizable details, and 1-click HTML download.
+                    </p>
+                    <div class="hero-cta">
+                        <button class="btn btn-primary" onclick="document.getElementById('fileLanding').click()">
+                            <i class="fa-solid fa-rocket"></i> Upload Resume
+                        </button>
+                        <a class="btn btn-ghost" href="#features" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'}); return false;">
+                            <i class="fa-solid fa-circle-info"></i> How it works
+                        </a>
+                    </div>
+                    <div class="feature-row" id="features">
+                        <div><i class="fa-solid fa-bolt"></i> AI extraction</div>
+                        <div><i class="fa-solid fa-palette"></i> 5 themes</div>
+                        <div><i class="fa-solid fa-expand"></i> Fullscreen preview</div>
+                        <div><i class="fa-solid fa-code"></i> HTML code inspection</div>
+                        <div><i class="fa-solid fa-download"></i> 1-click export</div>
+                    </div>
+                </div>
+
+                <div class="hero-right">
+                    <h3>Start with your PDF</h3>
+                    <p class="muted">We never store your file. Everything runs in your browser + our extractor.</p>
+                    <div class="dropzone" id="dropzone">
+                        <div class="ico"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                        <h4>Drag & drop your resume</h4>
+                        <p>or <span class="browse">browse files</span></p>
+                        <p class="hint">PDF only &middot; stays private</p>
+                    </div>
+                    <input type="file" id="fileLanding" accept=".pdf" hidden>
+                    <div class="file-card" id="fileCard">
+                        <div class="ico-sm"><i class="fa-regular fa-file-pdf"></i></div>
+                        <div style="flex:1; min-width:0;">
+                            <div class="name" id="fileName">resume.pdf</div>
+                            <div class="size" id="fileSize">0 KB</div>
+                        </div>
+                        <i class="fa-solid fa-circle-check" style="color: var(--success);"></i>
+                    </div>
+                    <div class="provider-pill" id="providerPill">
+                        <span class="dot"></span>
+                        <span id="providerText">Checking AI provider...</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             WORKSPACE VIEW (Full Viewport, No Navbar!)
+             ========================================== -->
+        <section id="workspaceView" class="view">
+            <!-- SLIM UTILITY WORKSPACE TOP BAR (52px) -->
+            <header class="workspace-bar" id="workspaceBar">
+                <div class="ws-left">
+                    <button class="ws-back-btn" onclick="showView('landing')" title="Back to Upload Resume">
+                        <i class="fa-solid fa-arrow-left"></i> <span>Upload New</span>
+                    </button>
+                    <div class="ws-title-badge">
+                        <i class="fa-solid fa-user-tie"></i>
+                        <span id="wsUserName">Portfolio</span>
+                    </div>
+                    <div class="ws-provider-pill" id="wsProviderStatus">
+                        <span class="dot"></span>
+                        <span id="wsProviderText">AI Active</span>
+                    </div>
+                </div>
+
+                <!-- MAIN TABS: PREVIEW | EDIT DETAILS | CODE | SPLIT VIEW -->
+                <div class="ws-center">
+                    <div class="tab-pill-group">
+                        <button class="tab-btn active" id="tabBtnPreview" onclick="switchTab('preview')" title="View full portfolio preview">
+                            <i class="fa-solid fa-eye"></i> <span>Preview</span>
+                        </button>
+                        <button class="tab-btn" id="tabBtnEdit" onclick="switchTab('edit')" title="Add and edit portfolio information">
+                            <i class="fa-solid fa-pen-to-square"></i> <span>Edit Details</span>
+                        </button>
+                        <button class="tab-btn" id="tabBtnCode" onclick="switchTab('code')" title="View generated HTML source code">
+                            <i class="fa-solid fa-code"></i> <span>Code</span>
+                        </button>
+                        <button class="tab-btn" id="tabBtnSplit" onclick="switchTab('split')" title="Side-by-side edit and live preview">
+                            <i class="fa-solid fa-table-columns"></i> <span>Split View</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="ws-right">
+                    <!-- Quick Template Dropdown -->
+                    <div class="ws-select-wrap">
+                        <i class="fa-solid fa-palette"></i>
+                        <select class="ws-select" id="quickTemplateSelect" onchange="onQuickTemplateChange(this.value)">
+                            <!-- populated dynamically -->
+                        </select>
+                    </div>
+                    <!-- Theme Toggle -->
+                    <button class="icon-btn" onclick="toggleTheme()" title="Toggle Dark/Light theme" style="width:34px; height:34px;">
+                        <i class="fa-solid fa-moon"></i>
+                        <i class="fa-solid fa-sun"></i>
+                    </button>
+                    <!-- Open in New Browser Tab -->
+                    <button class="ws-action-btn" onclick="openPreviewInNewTab()" title="Open live portfolio in a new browser tab">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> <span>New Tab</span>
+                    </button>
+                    <!-- Download HTML -->
+                    <button class="btn btn-primary btn-sm" onclick="exportPortfolio()" title="Download single HTML portfolio file">
+                        <i class="fa-solid fa-download"></i> <span>Download HTML</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- WORKSPACE CONTENT: TAB PANES -->
+            <div class="workspace-content">
+                <!-- ----------------------------------------------------
+                     TAB 1: LIVE PREVIEW (Bigger & Full-Screen)
+                     ---------------------------------------------------- -->
+                <div class="ws-pane active" id="panePreview">
+                    <!-- Sleek Floating Glass Pill (Doesn't waste vertical space!) -->
+                    <div class="preview-floating-bar">
+                        <div class="pf-group">
+                            <button class="pf-btn active" id="btnDevDesktop" onclick="setViewport('desktop', this)" title="100% Fullscreen Width">
+                                <i class="fa-solid fa-desktop"></i> <span>Desktop</span>
+                            </button>
+                            <button class="pf-btn" id="btnDevTablet" onclick="setViewport('tablet', this)" title="Tablet Width (768px)">
+                                <i class="fa-solid fa-tablet-screen-button"></i> <span>Tablet</span>
+                            </button>
+                            <button class="pf-btn" id="btnDevMobile" onclick="setViewport('mobile', this)" title="Mobile Width (390px)">
+                                <i class="fa-solid fa-mobile-screen-button"></i> <span>Mobile</span>
+                            </button>
+                        </div>
+                        <div class="pf-divider"></div>
+                        <div class="pf-group">
+                            <button class="pf-icon-btn" onclick="refreshPreview()" title="Refresh preview frame">
+                                <i class="fa-solid fa-arrows-rotate"></i>
+                            </button>
+                            <button class="pf-icon-btn" onclick="openPreviewInNewTab()" title="Open preview in real browser tab">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            </button>
+                            <button class="pf-icon-btn" onclick="toggleFullscreen()" title="Toggle full-screen mode">
+                                <i class="fa-solid fa-expand"></i>
+                            </button>
+                        </div>
+                        <div class="pf-divider"></div>
+                        <button class="pf-btn pf-edit-shortcut" onclick="switchTab('edit')">
+                            <i class="fa-solid fa-pen-to-square"></i> <span>Edit Details</span>
+                        </button>
+                        <button class="pf-btn" onclick="switchTab('code')">
+                            <i class="fa-solid fa-code"></i> <span>View Code</span>
+                        </button>
+                    </div>
+
+                    <!-- Edge-to-Edge Frame Wrap: 100% width and 100% height! -->
+                    <div class="preview-frame-wrap mode-desktop" id="previewFrameWrap">
+                        <iframe id="previewFrame" title="Portfolio Live Preview"></iframe>
+                    </div>
+                </div>
+
+                <!-- ----------------------------------------------------
+                     TAB 2: CODE VIEW (HTML Source Code Inspector)
+                     ---------------------------------------------------- -->
+                <div class="ws-pane" id="paneCode">
+                    <div class="code-header-bar">
+                        <div class="code-meta">
+                            <div class="code-file-badge">
+                                <i class="fa-solid fa-file-code"></i>
+                                <span>portfolio.html</span>
+                            </div>
+                            <span class="code-stats-pill" id="codeStats">0 KB &bull; 0 lines</span>
+                        </div>
+                        <div class="code-actions">
+                            <button class="btn btn-ghost btn-sm" onclick="copyCode(this)" id="copyCodeBtn">
+                                <i class="fa-regular fa-copy"></i> <span>Copy Code</span>
+                            </button>
+                            <button class="btn btn-primary btn-sm" onclick="exportPortfolio()">
+                                <i class="fa-solid fa-download"></i> <span>Download File</span>
+                            </button>
+                            <button class="btn btn-ghost btn-sm" onclick="switchTab('preview')">
+                                <i class="fa-solid fa-eye"></i> <span>Back to Preview</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-body-wrap">
+                        <div class="code-gutter" id="codeGutter" aria-hidden="true">1</div>
+                        <pre class="code-pre"><code id="codeContent" class="language-html">&lt;!-- Generating your portfolio HTML... --&gt;</code></pre>
+                    </div>
+                </div>
+
+                <!-- ----------------------------------------------------
+                     TAB 3: EDIT DETAILS (Spacious, Intuitive, No Wasted Space)
+                     ---------------------------------------------------- -->
+                <div class="ws-pane" id="paneEdit">
+                    <!-- Left Section Jumper Sidebar -->
+                    <aside class="edit-sidebar">
+                        <div class="edit-sidebar-title">Form Sections</div>
+                        <a class="edit-nav-item active" onclick="scrollToSec('sec-theme', this)">
+                            <i class="fa-solid fa-palette"></i> <span>Design & Theme</span>
+                        </a>
+                        <a class="edit-nav-item" onclick="scrollToSec('sec-hero', this)">
+                            <i class="fa-solid fa-user"></i> <span>Hero & About</span>
+                        </a>
+                        <a class="edit-nav-item" onclick="scrollToSec('sec-contact', this)">
+                            <i class="fa-solid fa-share-nodes"></i> <span>Contact & Links</span>
+                        </a>
+                        <a class="edit-nav-item" onclick="scrollToSec('sec-exp', this)">
+                            <i class="fa-solid fa-briefcase"></i> <span>Experience</span>
+                        </a>
+                        <a class="edit-nav-item" onclick="scrollToSec('sec-proj', this)">
+                            <i class="fa-solid fa-code-branch"></i> <span>Projects</span>
+                        </a>
+                        <a class="edit-nav-item" onclick="scrollToSec('sec-skills', this)">
+                            <i class="fa-solid fa-bolt"></i> <span>Skills</span>
+                        </a>
+                        <a class="edit-nav-item" onclick="scrollToSec('sec-edu', this)">
+                            <i class="fa-solid fa-graduation-cap"></i> <span>Education</span>
+                        </a>
+                        <a class="edit-nav-item" onclick="scrollToSec('sec-hobbies', this)">
+                            <i class="fa-solid fa-icons"></i> <span>Hobbies</span>
+                        </a>
+
+                        <div class="edit-sidebar-footer">
+                            <button class="btn btn-primary btn-sm" onclick="switchTab('preview')" style="width:100%;">
+                                <i class="fa-solid fa-eye"></i> View Preview
+                            </button>
+                            <button class="btn btn-ghost btn-sm" onclick="switchTab('code')" style="width:100%;">
+                                <i class="fa-solid fa-code"></i> View Code
+                            </button>
+                        </div>
+                    </aside>
+
+                    <!-- Main Spacious Editor Area -->
+                    <div class="edit-scroll-body" id="editScrollBody">
+                        <!-- Missing Fields Alert -->
+                        <div class="missing-banner" id="missingBanner">
+                            <h6><i class="fa-solid fa-triangle-exclamation"></i> Fields missing from your resume</h6>
+                            <p>We couldn't detect these fields automatically. You can fill them in below to complete your portfolio:</p>
+                            <div class="chips" id="missingChips"></div>
+                        </div>
+
+                        <!-- SECTION 1: Design & Theme -->
+                        <section class="edit-card" id="sec-theme">
+                            <div class="sec-head">
+                                <div>
+                                    <h3><i class="fa-solid fa-palette"></i> Design & Template</h3>
+                                    <p>Select your portfolio layout style, accent glow color, and light/dark theme</p>
+                                </div>
+                            </div>
+
+                            <label style="font-size:0.8rem; font-weight:700; color:var(--text-muted);">SELECT PORTFOLIO TEMPLATE</label>
+                            <div class="template-cards-grid" id="templateGrid"></div>
+
+                            <div class="form-grid-2" style="margin-top: 1.5rem;">
+                                <div>
+                                    <label style="font-size:0.8rem; font-weight:700; color:var(--text-muted); display:flex; justify-content:space-between;">
+                                        <span>ACCENT COLOR HUE</span>
+                                        <span class="hue-val-badge" id="hueVal">265</span>
+                                    </label>
+                                    <div class="hue-slider-wrap">
+                                        <input type="range" id="hueRange" min="0" max="360" value="265" oninput="updateHue(this.value)">
+                                    </div>
+                                    <div class="color-swatches">
+                                        <button class="swatch-btn" style="background:#a78bfa;" onclick="setHue(265)" title="Purple / Violet"></button>
+                                        <button class="swatch-btn" style="background:#6366f1;" onclick="setHue(240)" title="Indigo"></button>
+                                        <button class="swatch-btn" style="background:#38bdf8;" onclick="setHue(200)" title="Cyan / Sky"></button>
+                                        <button class="swatch-btn" style="background:#10b981;" onclick="setHue(150)" title="Emerald Green"></button>
+                                        <button class="swatch-btn" style="background:#f59e0b;" onclick="setHue(40)" title="Amber Gold"></button>
+                                        <button class="swatch-btn" style="background:#ec4899;" onclick="setHue(330)" title="Neon Rose"></button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label style="font-size:0.8rem; font-weight:700; color:var(--text-muted);">PORTFOLIO THEME MODE</label>
+                                    <div class="theme-toggle-row">
+                                        <button class="theme-pill-btn active" data-theme="dark" onclick="setWorkspaceTheme('dark', this)">
+                                            <i class="fa-solid fa-moon"></i> Dark Mode
+                                        </button>
+                                        <button class="theme-pill-btn" data-theme="light" onclick="setWorkspaceTheme('light', this)">
+                                            <i class="fa-solid fa-sun"></i> Light Mode
+                                        </button>
+                                    </div>
+                                    <span style="display:block; font-size:0.75rem; color:var(--text-dim); margin-top:0.4rem;">
+                                        Aurora template features full real-time light/dark mode switching.
+                                    </span>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- SECTION 2: Hero & Bio -->
+                        <section class="edit-card" id="sec-hero">
+                            <div class="sec-head">
+                                <div>
+                                    <h3><i class="fa-solid fa-user"></i> Hero & About</h3>
+                                    <p>Your primary name, role headline, and personal narrative</p>
+                                </div>
+                            </div>
+                            <div class="form-grid-2">
+                                <div class="form-group">
+                                    <label><i class="fa-solid fa-id-card"></i> Full Name</label>
+                                    <input id="editName" placeholder="e.g. Alex Morgan" oninput="debouncedUpdateFromEditor()">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fa-solid fa-bolt"></i> Tagline / Headline</label>
+                                    <input id="editIntro" placeholder="e.g. Full Stack Developer building high-scale applications" oninput="debouncedUpdateFromEditor()">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fa-solid fa-file-lines"></i> About Me (Bio)</label>
+                                <textarea id="editAbout" rows="3" placeholder="A compelling introduction describing your journey, passion, and what makes your work stand out." oninput="debouncedUpdateFromEditor()"></textarea>
+                            </div>
+                        </section>
+
+                        <!-- SECTION 3: Contact & Links -->
+                        <section class="edit-card" id="sec-contact">
+                            <div class="sec-head">
+                                <div>
+                                    <h3><i class="fa-solid fa-share-nodes"></i> Contact & Links</h3>
+                                    <p>Direct communication channels and public profiles</p>
+                                </div>
+                            </div>
+                            <div class="form-grid-3">
+                                <div class="form-group">
+                                    <label><i class="fa-solid fa-envelope"></i> Email Address</label>
+                                    <input id="editEmail" type="email" placeholder="alex@example.com" oninput="debouncedUpdateFromEditor()">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fa-solid fa-phone"></i> Phone Number</label>
+                                    <input id="editPhone" placeholder="+1 (555) 000-0000" oninput="debouncedUpdateFromEditor()">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fa-solid fa-globe"></i> Personal Website</label>
+                                    <input id="editPortfolio" placeholder="https://yoursite.com" onblur="formatUrl(this)" oninput="debouncedUpdateFromEditor()">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fa-brands fa-github"></i> GitHub Profile</label>
+                                    <input id="editGithub" placeholder="https://github.com/username" onblur="formatUrl(this)" oninput="debouncedUpdateFromEditor()">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fa-brands fa-linkedin"></i> LinkedIn Profile</label>
+                                    <input id="editLinkedin" placeholder="https://linkedin.com/in/username" onblur="formatUrl(this)" oninput="debouncedUpdateFromEditor()">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fa-brands fa-x-twitter"></i> Twitter / X Profile</label>
+                                    <input id="editTwitter" placeholder="https://x.com/username" onblur="formatUrl(this)" oninput="debouncedUpdateFromEditor()">
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- SECTION 4: Experience -->
+                        <section class="edit-card" id="sec-exp">
+                            <div class="sec-head">
+                                <div>
+                                    <h3><i class="fa-solid fa-briefcase"></i> Work Experience</h3>
+                                    <p>Career history, internships, and key accomplishments</p>
+                                </div>
+                            </div>
+                            <div class="items-list" id="expList"></div>
+                            <button class="add-block-btn" onclick="addExperience()">
+                                <i class="fa-solid fa-plus"></i> Add Work Experience
+                            </button>
+                        </section>
+
+                        <!-- SECTION 5: Projects -->
+                        <section class="edit-card" id="sec-proj">
+                            <div class="sec-head">
+                                <div>
+                                    <h3><i class="fa-solid fa-code-branch"></i> Projects</h3>
+                                    <p>Showcase your work with descriptions, bullet highlights, and code/demo links</p>
+                                </div>
+                            </div>
+                            <div class="items-list" id="projList"></div>
+                            <button class="add-block-btn" onclick="addProject()">
+                                <i class="fa-solid fa-plus"></i> Add Project
+                            </button>
+                        </section>
+
+                        <!-- SECTION 6: Skills -->
+                        <section class="edit-card" id="sec-skills">
+                            <div class="sec-head">
+                                <div>
+                                    <h3><i class="fa-solid fa-bolt"></i> Skills & Expertise</h3>
+                                    <p>Technologies, languages, and technical tools</p>
+                                </div>
+                            </div>
+                            <div class="skills-pills-container" id="skillsChips"></div>
+                            <div class="skill-add-row">
+                                <input id="newSkillInput" placeholder="Type a skill (e.g. Python, React, AWS) and press Enter" onkeydown="handleSkillKey(event)">
+                                <button class="btn btn-ghost" onclick="addSkillFromInput()">
+                                    <i class="fa-solid fa-plus"></i> Add Skill
+                                </button>
+                            </div>
+                            <details style="margin-top: 1rem;">
+                                <summary style="cursor:pointer; font-size:0.82rem; color:var(--text-dim); user-select:none;">Bulk edit skills as comma-separated text</summary>
+                                <div style="margin-top:0.6rem;">
+                                    <input id="editSkills" placeholder="Python, React, TypeScript, Docker, SQL..." oninput="onBulkSkillsInput()">
+                                </div>
+                            </details>
+                        </section>
+
+                        <!-- SECTION 7: Education -->
+                        <section class="edit-card" id="sec-edu">
+                            <div class="sec-head">
+                                <div>
+                                    <h3><i class="fa-solid fa-graduation-cap"></i> Education</h3>
+                                    <p>Degrees, academic institutions, and graduation credentials</p>
+                                </div>
+                            </div>
+                            <div class="form-grid-2">
+                                <div class="form-group">
+                                    <label><i class="fa-solid fa-award"></i> Degree / Major</label>
+                                    <input id="editDegree" placeholder="e.g. B.S. in Computer Science" oninput="debouncedUpdateFromEditor()">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fa-solid fa-building-columns"></i> Institution / University</label>
+                                    <input id="editInstitution" placeholder="e.g. Stanford University" oninput="debouncedUpdateFromEditor()">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fa-solid fa-calendar"></i> Years Attended</label>
+                                    <input id="editYears" placeholder="e.g. 2020 - 2024" oninput="debouncedUpdateFromEditor()">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fa-solid fa-star"></i> GPA / Honors / Score</label>
+                                    <input id="editGpa" placeholder="e.g. 3.9 / 4.0 or First Class Honors" oninput="debouncedUpdateFromEditor()">
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- SECTION 8: Hobbies -->
+                        <section class="edit-card" id="sec-hobbies">
+                            <div class="sec-head">
+                                <div>
+                                    <h3><i class="fa-solid fa-icons"></i> Hobbies & Interests</h3>
+                                    <p>Activities and personal pursuits that complement your profile</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Hobbies (comma-separated)</label>
+                                <input id="editHobbies" placeholder="Open Source, Chess, Astronomy, Hiking, UI Design" oninput="debouncedUpdateFromEditor()">
+                            </div>
+                        </section>
+
+                        <!-- Sticky Floating Action Bar inside Edit View -->
+                        <div class="edit-bottom-bar">
+                            <div class="live-sync">
+                                <span class="pulse-dot"></span>
+                                <span>Changes live-synced to preview & code</span>
+                            </div>
+                            <div class="edit-bottom-actions">
+                                <button class="btn btn-ghost" onclick="switchTab('code')">
+                                    <i class="fa-solid fa-code"></i> View Code
+                                </button>
+                                <button class="btn btn-ghost" onclick="exportPortfolio()">
+                                    <i class="fa-solid fa-download"></i> Download HTML
+                                </button>
+                                <button class="btn btn-primary" onclick="switchTab('preview')">
+                                    <i class="fa-solid fa-eye"></i> View Preview &rarr;
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ----------------------------------------------------
+                     TAB 4: SPLIT VIEW (Side-by-Side)
+                     ---------------------------------------------------- -->
+                <div class="ws-pane" id="paneSplit">
+                    <div class="split-edit-col" id="splitEditCol">
+                        <!-- Compact Editor mirrored -->
+                        <div style="margin-bottom:1rem; font-weight:700; color:var(--accent); font-size:0.9rem; display:flex; align-items:center; justify-content:space-between;">
+                            <span><i class="fa-solid fa-pen-to-square"></i> Quick Edit</span>
+                            <button class="btn btn-ghost btn-sm" onclick="switchTab('edit')"><i class="fa-solid fa-expand"></i> Full Editor</button>
+                        </div>
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input id="splitEditName" placeholder="Full Name" oninput="syncFromSplit('Name', this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label>Tagline</label>
+                            <input id="splitEditIntro" placeholder="Tagline" oninput="syncFromSplit('Introduction', this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label>About</label>
+                            <textarea id="splitEditAbout" rows="3" placeholder="About" oninput="syncFromSplit('About', this.value)"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Skills</label>
+                            <input id="splitEditSkills" placeholder="Skills" oninput="syncFromSplitSkills(this.value)">
+                        </div>
+                        <div style="margin-top:1.5rem; display:flex; gap:0.5rem;">
+                            <button class="btn btn-primary btn-sm" style="flex:1;" onclick="switchTab('preview')"><i class="fa-solid fa-eye"></i> Full Preview</button>
+                            <button class="btn btn-ghost btn-sm" style="flex:1;" onclick="exportPortfolio()"><i class="fa-solid fa-download"></i> Download</button>
+                        </div>
+                    </div>
+                    <div class="split-preview-col">
+                        <iframe id="splitPreviewFrame" title="Split Live Preview"></iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- LOADER OVERLAY -->
+    <div class="loader-overlay" id="loader">
+        <div class="spinner"></div>
+        <h3 id="loaderTitle">Reading your resume...</h3>
+        <p id="loaderSub">Extracting skills, projects & links</p>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div class="toast" id="toast">
+        <i id="toastIcon" class="fa-solid fa-circle-check success-i"></i>
+        <span id="toastMsg">Done</span>
+    </div>
+
+    <!-- Prism JS for Code Highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+
+    <script>
+        // ==================== STATE ====================
+        let currentFile         = null;
+        let activeTemplate      = "aurora";
+        let activeHue           = 265;
+        let workspaceTheme      = "dark";
+        let data                = {};
+        let templates           = [];
+        let currentRenderedHtml = "";
+        let currentTab          = "preview";
+        let debounceTimer       = null;
+
+        // ==================== INIT ====================
+        window.addEventListener("DOMContentLoaded", async () => {
+            const saved = localStorage.getItem("app-theme") || "dark";
+            document.documentElement.setAttribute("data-theme", saved);
+            startBgAnimation();
+            try {
+                const res  = await fetch("/api/templates");
+                const json = await res.json();
+                templates = json.templates || [];
+                renderTemplateGrid();
+                populateQuickSelect();
+                updateProviderPill(json.providers || {});
+            } catch (e) {
+                console.warn("Failed to load templates", e);
+            }
+        });
+
+        function updateProviderPill(providers) {
+            const pill = document.getElementById("providerPill");
+            const txt  = document.getElementById("providerText");
+            const wsPill = document.getElementById("wsProviderStatus");
+            const wsTxt = document.getElementById("wsProviderText");
+            if (providers.groq || providers.anthropic) {
+                if (pill) pill.classList.remove("warn");
+                const providerName = providers.groq ? "Groq (LLM)" : "Anthropic (LLM)";
+                if (txt) txt.textContent = "AI provider: " + providerName + " ready";
+                if (wsTxt) wsTxt.textContent = providerName + " Ready";
+            } else {
+                if (pill) pill.classList.add("warn");
+                if (txt) txt.textContent = "Offline smart parser active";
+                if (wsTxt) wsTxt.textContent = "Offline Parser";
+            }
+        }
+
+        // ==================== THEME ====================
+        function toggleTheme() {
+            const root = document.documentElement;
+            const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+            root.setAttribute("data-theme", next);
+            localStorage.setItem("app-theme", next);
+        }
+
+        // ==================== VIEW SWITCHING ====================
+        function showView(name) {
+            const isWorkspace = (name === "workspace");
+            document.getElementById("landingView").classList.toggle("active", !isWorkspace);
+            document.getElementById("workspaceView").classList.toggle("active", isWorkspace);
+            
+            // Toggle body class so CSS removes landing navbar completely
+            document.body.classList.toggle("in-workspace", isWorkspace);
+
+            if (isWorkspace) {
+                switchTab(currentTab || "preview");
+            }
+        }
+
+        // ==================== TAB SWITCHING ====================
+        function switchTab(tab) {
+            currentTab = tab;
+            // Tab buttons
+            document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+            const btn = document.getElementById(`tabBtn${capitalize(tab)}`);
+            if (btn) btn.classList.add("active");
+
+            // Panes
+            document.querySelectorAll(".ws-pane").forEach(p => p.classList.remove("active"));
+            const pane = document.getElementById(`pane${capitalize(tab)}`);
+            if (pane) pane.classList.add("active");
+
+            // Refresh specific pane content if needed
+            if (tab === "code" && currentRenderedHtml) {
+                updateCodeView(currentRenderedHtml);
+            }
+            if (tab === "preview" && currentRenderedHtml) {
+                updatePreviewFrame(currentRenderedHtml);
+            }
+            if (tab === "split" && currentRenderedHtml) {
+                const sf = document.getElementById("splitPreviewFrame");
+                if (sf) sf.srcdoc = currentRenderedHtml;
+                syncToSplitEditor();
+            }
+        }
+        function capitalize(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        // ==================== FILE HANDLING ====================
+        const dropzone = document.getElementById("dropzone");
+        dropzone.addEventListener("click", () => document.getElementById("fileLanding").click());
+        dropzone.addEventListener("dragover",  (e) => { e.preventDefault(); dropzone.classList.add("drag"); });
+        dropzone.addEventListener("dragleave", ()  => dropzone.classList.remove("drag"));
+        dropzone.addEventListener("drop", (e) => {
+            e.preventDefault();
+            dropzone.classList.remove("drag");
+            if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+        });
+        document.getElementById("fileLanding").addEventListener("change", (e) => {
+            if (e.target.files.length) handleFile(e.target.files[0]);
+        });
+
+        function handleFile(file) {
+            if (!file.name.toLowerCase().endsWith(".pdf")) {
+                toast("Please upload a PDF file.", "error");
+                return;
+            }
+            currentFile = file;
+            document.getElementById("fileName").textContent = file.name;
+            document.getElementById("fileSize").textContent = (file.size / 1024).toFixed(1) + " KB";
+            document.getElementById("fileCard").style.display = "flex";
+            processPdf();
+        }
+
+        // ==================== PDF PROCESSING ====================
+        async function processPdf() {
+            if (!currentFile) return;
+            showLoader("Reading your resume...", "Extracting skills, projects & links");
+
+            const form = new FormData();
+            form.append("resume", currentFile);
+
+            try {
+                const res  = await fetch("/api/upload", { method: "POST", body: form });
+                const json = await res.json();
+                if (json.success) {
+                    data = json.data;
+                    const name = data.Name || "Portfolio";
+                    document.getElementById("wsUserName").textContent = name;
+                    
+                    const providerUsed = json.provider_used || "fallback";
+                    const wsTxt = document.getElementById("wsProviderText");
+                    if (wsTxt) wsTxt.textContent = providerUsed + " Engine";
+
+                    populateEditor(data);
+                    renderExperience(data.Experience || []);
+                    renderProjects(data.Projects || []);
+                    renderSkillsChips(data.Skills || []);
+                    renderMissing(json.data.missing_fields || []);
+                    
+                    showView("workspace");
+                    await renderPreview();
+                    hideLoader();
+                    switchTab("preview");
+                    toast("Portfolio generated successfully! View preview or click Edit Details to customize.", "success");
+                } else {
+                    hideLoader();
+                    toast(json.error || "Failed to process PDF", "error");
+                }
+            } catch (err) {
+                hideLoader();
+                toast("Server error: " + err.message, "error");
+            }
+        }
+
+        function showLoader(title, sub) {
+            document.getElementById("loaderTitle").textContent = title;
+            document.getElementById("loaderSub").textContent   = sub;
+            document.getElementById("loader").classList.add("show");
+        }
+        function hideLoader() { document.getElementById("loader").classList.remove("show"); }
+
+        function toast(msg, type) {
+            const t = document.getElementById("toast");
+            t.className = "toast show " + (type || "success");
+            document.getElementById("toastMsg").textContent = msg;
+            document.getElementById("toastIcon").className = type === "error"
+                ? "fa-solid fa-circle-xmark error-i"
+                : "fa-solid fa-circle-check success-i";
+            clearTimeout(window._toastT);
+            window._toastT = setTimeout(() => t.classList.remove("show"), 3800);
+        }
+
+        // ==================== POPULATE EDITOR ====================
+        function populateEditor(d) {
+            document.getElementById("editName").value        = d.Name        || "";
+            document.getElementById("editIntro").value       = d.Introduction|| "";
+            document.getElementById("editAbout").value       = d.About       || "";
+            document.getElementById("editEmail").value       = d.Email       || "";
+            document.getElementById("editPhone").value       = d.Phone       || "";
+            document.getElementById("editGithub").value      = d.Github      || "";
+            document.getElementById("editLinkedin").value    = d.Linkedin    || "";
+            document.getElementById("editPortfolio").value   = d.Portfolio_URL|| "";
+            document.getElementById("editTwitter").value     = d.Twitter     || "";
+            
+            const skills = (d.SkillsGrouped || []).flatMap(g => g.skills || []);
+            if (!skills.length && d.Skills) skills.push(...d.Skills);
+            data.Skills = skills;
+            document.getElementById("editSkills").value      = skills.join(", ");
+            renderSkillsChips(skills);
+
+            document.getElementById("editHobbies").value     = (d.Hobbies || []).join(", ");
+            const e = (d.Education && d.Education[0]) || {};
+            document.getElementById("editDegree").value      = e.degree       || "";
+            document.getElementById("editInstitution").value = e.institution  || "";
+            document.getElementById("editYears").value       = e.years        || "";
+            document.getElementById("editGpa").value         = e.gpa          || "";
+
+            syncToSplitEditor();
+        }
+
+        function syncToSplitEditor() {
+            const sn = document.getElementById("splitEditName");
+            if (sn) sn.value = data.Name || "";
+            const si = document.getElementById("splitEditIntro");
+            if (si) si.value = data.Introduction || "";
+            const sa = document.getElementById("splitEditAbout");
+            if (sa) sa.value = data.About || "";
+            const ss = document.getElementById("splitEditSkills");
+            if (ss) ss.value = (data.Skills || []).join(", ");
+        }
+
+        function syncFromSplit(field, val) {
+            data[field] = val;
+            if (field === "Name") document.getElementById("editName").value = val;
+            if (field === "Introduction") document.getElementById("editIntro").value = val;
+            if (field === "About") document.getElementById("editAbout").value = val;
+            debouncedUpdateFromEditor();
+        }
+        function syncFromSplitSkills(val) {
+            const arr = val.split(",").map(s => s.trim()).filter(Boolean);
+            data.Skills = arr;
+            data.SkillsGrouped = arr.length ? [{ category: "Technical Skills", skills: arr }] : [];
+            document.getElementById("editSkills").value = val;
+            renderSkillsChips(arr);
+            debouncedUpdateFromEditor();
+        }
+
+        function renderMissing(missing) {
+            const banner = document.getElementById("missingBanner");
+            const chips  = document.getElementById("missingChips");
+            chips.innerHTML = "";
+            if (missing && missing.length) {
+                missing.forEach(m => {
+                    const s = document.createElement("span");
+                    s.className = "chip";
+                    s.textContent = m;
+                    chips.appendChild(s);
+                });
+                banner.style.display = "block";
+            } else {
+                banner.style.display = "none";
+            }
+        }
+
+        // ==================== SKILLS CHIPS MANAGER ====================
+        function renderSkillsChips(skills) {
+            const container = document.getElementById("skillsChips");
+            if (!container) return;
+            container.innerHTML = "";
+            skills.forEach((skill, idx) => {
+                const chip = document.createElement("div");
+                chip.className = "skill-chip";
+                chip.innerHTML = `
+                    <span>${esc(skill)}</span>
+                    <span class="remove-chip" onclick="removeSkill(${idx})" title="Remove skill">&times;</span>
+                `;
+                container.appendChild(chip);
+            });
+        }
+        function addSkillFromInput() {
+            const input = document.getElementById("newSkillInput");
+            const val = input.value.trim();
+            if (!val) return;
+            if (!data.Skills) data.Skills = [];
+            data.Skills.push(val);
+            data.SkillsGrouped = [{ category: "Technical Skills", skills: data.Skills }];
+            document.getElementById("editSkills").value = data.Skills.join(", ");
+            renderSkillsChips(data.Skills);
+            input.value = "";
+            debouncedUpdateFromEditor();
+        }
+        function removeSkill(idx) {
+            if (!data.Skills) return;
+            data.Skills.splice(idx, 1);
+            data.SkillsGrouped = [{ category: "Technical Skills", skills: data.Skills }];
+            document.getElementById("editSkills").value = data.Skills.join(", ");
+            renderSkillsChips(data.Skills);
+            debouncedUpdateFromEditor();
+        }
+        function handleSkillKey(e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                addSkillFromInput();
+            }
+        }
+        function onBulkSkillsInput() {
+            const val = document.getElementById("editSkills").value;
+            const arr = val.split(",").map(s => s.trim()).filter(Boolean);
+            data.Skills = arr;
+            data.SkillsGrouped = arr.length ? [{ category: "Technical Skills", skills: arr }] : [];
+            renderSkillsChips(arr);
+            debouncedUpdateFromEditor();
+        }
+
+        // ==================== EXPERIENCE / PROJECTS ====================
+        function renderExperience(items) {
+            const c = document.getElementById("expList");
+            c.innerHTML = "";
+            items.forEach((e, i) => c.appendChild(makeExpCard(e, i)));
+        }
+        function makeExpCard(e, i) {
+            const d = document.createElement("div");
+            d.className = "item-card";
+            d.innerHTML = `
+                <div class="item-card-head">
+                    <span><i class="fa-solid fa-briefcase"></i> Role #${i + 1}</span>
+                    <button class="item-del-btn" onclick="removeExp(${i})" title="Remove Role">
+                        <i class="fa-solid fa-trash"></i> Remove
+                    </button>
+                </div>
+                <div class="form-grid-3">
+                    <div class="form-group"><label>Job Title</label><input class="exp-role" value="${esc(e.role || '')}" oninput="debouncedUpdateFromEditor()"></div>
+                    <div class="form-group"><label>Company</label><input class="exp-company" value="${esc(e.company || '')}" oninput="debouncedUpdateFromEditor()"></div>
+                    <div class="form-group"><label>Dates</label><input class="exp-dates" value="${esc(e.dates || '')}" oninput="debouncedUpdateFromEditor()"></div>
+                </div>
+                <div class="form-group"><label>Key Responsibilities</label><textarea class="exp-desc" rows="2" oninput="debouncedUpdateFromEditor()">${esc(e.description || '')}</textarea></div>
+            `;
+            return d;
+        }
+        function addExperience() {
+            if (!data.Experience) data.Experience = [];
+            data.Experience.push({ role: "New Role", company: "Company", dates: "", description: "" });
+            renderExperience(data.Experience);
+            debouncedUpdateFromEditor();
+        }
+        function removeExp(i) {
+            data.Experience.splice(i, 1);
+            renderExperience(data.Experience);
+            debouncedUpdateFromEditor();
+        }
+
+        function renderProjects(items) {
+            const c = document.getElementById("projList");
+            c.innerHTML = "";
+            items.forEach((p, i) => c.appendChild(makeProjCard(p, i)));
+        }
+        function makeProjCard(p, i) {
+            const d = document.createElement("div");
+            d.className = "item-card";
+            d.innerHTML = `
+                <div class="item-card-head">
+                    <span><i class="fa-solid fa-code-branch"></i> Project #${i + 1}</span>
+                    <button class="item-del-btn" onclick="removeProj(${i})" title="Remove Project">
+                        <i class="fa-solid fa-trash"></i> Remove
+                    </button>
+                </div>
+                <div class="form-grid-3">
+                    <div class="form-group"><label>Project Title</label><input class="proj-title" value="${esc(p.title || '')}" oninput="debouncedUpdateFromEditor()"></div>
+                    <div class="form-group"><label>GitHub URL</label><input class="proj-github" value="${esc(p.github_url || '')}" onblur="formatUrl(this)" oninput="debouncedUpdateFromEditor()"></div>
+                    <div class="form-group"><label>Live Demo URL</label><input class="proj-live" value="${esc(p.live_url || '')}" onblur="formatUrl(this)" oninput="debouncedUpdateFromEditor()"></div>
+                </div>
+                <div class="form-group"><label>Description</label><input class="proj-desc" value="${esc(p.description || '')}" oninput="debouncedUpdateFromEditor()"></div>
+                <div class="form-group"><label>Bullet Points / Highlights (one per line)</label><textarea class="proj-bullets" rows="3" oninput="debouncedUpdateFromEditor()">${esc((p.items || []).join('\n'))}</textarea></div>
+            `;
+            return d;
+        }
+        function addProject() {
+            if (!data.Projects) data.Projects = [];
+            data.Projects.push({ title: "New Project", description: "", items: [], github_url: "", live_url: "", tech_stack: [] });
+            renderProjects(data.Projects);
+            debouncedUpdateFromEditor();
+        }
+        function removeProj(i) {
+            data.Projects.splice(i, 1);
+            renderProjects(data.Projects);
+            debouncedUpdateFromEditor();
+        }
+
+        function esc(s) { return String(s || "").replace(/"/g, "&quot;"); }
+
+        function formatUrl(el) {
+            let v = el.value.trim();
+            if (v && !/^https?:\/\//i.test(v)) {
+                v = "https://" + v;
+                el.value = v;
+            }
+            debouncedUpdateFromEditor();
+        }
+
+        // ==================== DEBOUNCED EDITOR SYNC ====================
+        function debouncedUpdateFromEditor() {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                updateFromEditor();
+            }, 280);
+        }
+
+        function updateFromEditor() {
+            data.Name          = document.getElementById("editName").value;
+            data.Introduction  = document.getElementById("editIntro").value;
+            data.About         = document.getElementById("editAbout").value;
+            data.Email         = document.getElementById("editEmail").value;
+            data.Phone         = document.getElementById("editPhone").value;
+            data.Github        = document.getElementById("editGithub").value;
+            data.Linkedin      = document.getElementById("editLinkedin").value;
+            data.Portfolio_URL = document.getElementById("editPortfolio").value;
+            data.Twitter       = document.getElementById("editTwitter").value;
+            
+            document.getElementById("wsUserName").textContent = data.Name || "Portfolio";
+
+            data.Hobbies = document.getElementById("editHobbies").value.split(",").map(s => s.trim()).filter(Boolean);
+            data.Education = [{
+                degree:      document.getElementById("editDegree").value,
+                institution: document.getElementById("editInstitution").value,
+                years:       document.getElementById("editYears").value,
+                gpa:         document.getElementById("editGpa").value,
+            }];
+
+            data.Experience = Array.from(document.querySelectorAll("#expList .item-card")).map(c => ({
+                role:        c.querySelector(".exp-role").value,
+                company:     c.querySelector(".exp-company").value,
+                dates:       c.querySelector(".exp-dates").value,
+                description: c.querySelector(".exp-desc").value,
+            }));
+            data.Projects = Array.from(document.querySelectorAll("#projList .item-card")).map(c => ({
+                title:       c.querySelector(".proj-title").value,
+                description: c.querySelector(".proj-desc").value,
+                items:       c.querySelector(".proj-bullets").value.split("\n").map(b => b.trim()).filter(Boolean),
+                github_url:  c.querySelector(".proj-github").value,
+                live_url:    c.querySelector(".proj-live").value,
+                tech_stack:  (data.Skills || []).slice(0, 3),
+            }));
+
+            syncToSplitEditor();
+            renderPreview();
+        }
+
+        // ==================== TEMPLATES & PALETTE ====================
+        function populateQuickSelect() {
+            const sel = document.getElementById("quickTemplateSelect");
+            if (!sel) return;
+            sel.innerHTML = "";
+            templates.forEach(t => {
+                const opt = document.createElement("option");
+                opt.value = t.id;
+                opt.textContent = t.name;
+                if (t.id === activeTemplate) opt.selected = true;
+                sel.appendChild(opt);
+            });
+        }
+        function onQuickTemplateChange(val) {
+            activeTemplate = val;
+            document.querySelectorAll(".tpl-card").forEach(c => {
+                c.classList.toggle("active", c.getAttribute("data-id") === val);
+            });
+            renderPreview();
+        }
+
+        function renderTemplateGrid() {
+            const grid = document.getElementById("templateGrid");
+            if (!grid) return;
+            grid.innerHTML = "";
+            templates.forEach(t => {
+                const el = document.createElement("div");
+                el.className = "tpl-card" + (t.id === activeTemplate ? " active" : "");
+                el.setAttribute("data-id", t.id);
+                el.onclick = () => selectTemplate(t.id, el);
+                el.innerHTML = `
+                    ${t.badge ? `<span class="badge">${t.badge}</span>` : ""}
+                    <h5>${t.name}</h5>
+                    <p>${t.description}</p>
+                `;
+                grid.appendChild(el);
+            });
+        }
+        function selectTemplate(id, el) {
+            activeTemplate = id;
+            document.querySelectorAll(".tpl-card").forEach(e => e.classList.remove("active"));
+            if (el) el.classList.add("active");
+            const sel = document.getElementById("quickTemplateSelect");
+            if (sel) sel.value = id;
+            renderPreview();
+        }
+
+        function updateHue(v) {
+            activeHue = parseInt(v);
+            document.getElementById("hueVal").textContent = activeHue;
+            document.getElementById("hueRange").value = activeHue;
+            renderPreview();
+        }
+        function setHue(v) {
+            updateHue(v);
+        }
+
+        function setWorkspaceTheme(theme, btn) {
+            workspaceTheme = theme;
+            document.querySelectorAll(".theme-pill-btn").forEach(p => p.classList.remove("active"));
+            if (btn) btn.classList.add("active");
+            renderPreview();
+        }
+
+        // ==================== VIEWPORT CONTROLS ====================
+        function setViewport(mode, btn) {
+            document.querySelectorAll(".pf-btn").forEach(b => {
+                if (b.id && b.id.startsWith("btnDev")) b.classList.remove("active");
+            });
+            if (btn) btn.classList.add("active");
+
+            const wrap = document.getElementById("previewFrameWrap");
+            wrap.className = `preview-frame-wrap mode-${mode}`;
+        }
+
+        function toggleFullscreen() {
+            const elem = document.getElementById("previewFrameWrap");
+            if (!document.fullscreenElement) {
+                if (elem.requestFullscreen) elem.requestFullscreen();
+                else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
+        }
+
+        function scrollToSec(secId, btn) {
+            document.querySelectorAll(".edit-nav-item").forEach(i => i.classList.remove("active"));
+            if (btn) btn.classList.add("active");
+            const target = document.getElementById(secId);
+            if (target) {
+                target.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+        }
+
+        // ==================== PREVIEW & CODE RENDERING ====================
+        function palette() {
+            return {
+                bg_base:       `hsl(${activeHue}, 25%, 7%)`,
+                card_bg:       `hsl(${activeHue}, 22%, 12%)`,
+                border_color:  `hsla(${activeHue}, 30%, 80%, 0.14)`,
+                text_main:     `#E5E5E5`,
+                accent:        `hsl(${activeHue}, 90%, 65%)`,
+                accent_hover:  `hsl(${activeHue}, 90%, 75%)`,
+                accent_glow:   `hsla(${activeHue}, 90%, 65%, 0.3)`,
+            };
+        }
+
+        async function renderPreview() {
+            try {
+                const res = await fetch("/api/preview", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        template_id: activeTemplate,
+                        theme: workspaceTheme,
+                        data: { ...data, palette: palette() }
+                    })
+                });
+                const j = await res.json();
+                if (j.html) {
+                    currentRenderedHtml = j.html;
+                    updatePreviewFrame(j.html);
+                    updateCodeView(j.html);
+                }
+            } catch (e) {
+                console.error("Preview render error:", e);
+            }
+        }
+
+        function updatePreviewFrame(html) {
+            const frame = document.getElementById("previewFrame");
+            if (frame) frame.srcdoc = html;
+            const splitFrame = document.getElementById("splitPreviewFrame");
+            if (splitFrame) splitFrame.srcdoc = html;
+        }
+
+        function updateCodeView(html) {
+            const codeEl = document.getElementById("codeContent");
+            const statsEl = document.getElementById("codeStats");
+            const gutterEl = document.getElementById("codeGutter");
+            if (!codeEl) return;
+
+            codeEl.textContent = html;
+            if (window.Prism && window.Prism.highlightElement) {
+                try {
+                    Prism.highlightElement(codeEl);
+                } catch (e) {
+                    console.warn("Prism highlight error:", e);
+                }
+            }
+
+            const lines = html.split("\n");
+            if (statsEl) {
+                const kb = (new Blob([html]).size / 1024).toFixed(1);
+                statsEl.textContent = `${kb} KB • ${lines.length} lines • ${activeTemplate}`;
+            }
+
+            if (gutterEl) {
+                let gutterText = "";
+                for (let i = 1; i <= Math.min(lines.length, 1200); i++) {
+                    gutterText += i + "<br>";
+                }
+                gutterEl.innerHTML = gutterText;
+            }
+        }
+
+        function refreshPreview() {
+            renderPreview();
+            toast("Preview refreshed!", "success");
+        }
+
+        function openPreviewInNewTab() {
+            if (!currentRenderedHtml) {
+                toast("Portfolio is still generating...", "error");
+                return;
+            }
+            const blob = new Blob([currentRenderedHtml], { type: "text/html;charset=utf-8" });
+            const url  = URL.createObjectURL(blob);
+            window.open(url, "_blank");
+        }
+
+        async function copyCode(btn) {
+            if (!currentRenderedHtml) {
+                toast("No code generated yet", "error");
+                return;
+            }
+            try {
+                await navigator.clipboard.writeText(currentRenderedHtml);
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = `<i class="fa-solid fa-check" style="color:var(--success)"></i> <span>Copied!</span>`;
+                toast("HTML code copied to clipboard!", "success");
+                setTimeout(() => { btn.innerHTML = originalHtml; }, 2200);
+            } catch (err) {
+                const ta = document.createElement("textarea");
+                ta.value = currentRenderedHtml;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand("copy");
+                document.body.removeChild(ta);
+                toast("HTML code copied to clipboard!", "success");
+            }
+        }
+
+        async function exportPortfolio() {
+            try {
+                const res = await fetch("/api/export", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        template_id: activeTemplate,
+                        theme: workspaceTheme,
+                        data: { ...data, palette: palette() }
+                    })
+                });
+                if (!res.ok) {
+                    const j = await res.json().catch(() => ({}));
+                    toast(j.error || "Export failed", "error");
+                    return;
+                }
+                const blob = await res.blob();
+                const url  = URL.createObjectURL(blob);
+                const a    = document.createElement("a");
+                a.href     = url;
+                const name = (data.Name || "Portfolio").replace(/\s+/g, "_");
+                const themeBit = activeTemplate === "aurora" ? "_" + workspaceTheme : "";
+                a.download  = `${name}${themeBit}_Portfolio.html`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                URL.revokeObjectURL(url);
+                toast("Downloaded! Open the HTML file anywhere.", "success");
+            } catch (e) {
+                toast("Export failed: " + e.message, "error");
+            }
+        }
+
+        // ==================== ANIMATED BACKGROUND ====================
+        function startBgAnimation() {
+            const bg = document.getElementById("bg");
+            if (!bg) return;
+            const items = [
+                '101', '110', '01', '10', '111', '001', '1001', '1100', '0101', '1010',
+                '{', '}', '[', ']', '(', ')', '<', '>', '/', '*', '=',
+                'if', 'else', 'for', 'while', 'return', 'class', 'const', 'let', 'var',
+                'function', 'import', 'export', 'await', 'async', 'new',
+                'userName', 'data', 'result', 'count', 'value', 'status',
+                'HTML', 'CSS', 'JS', 'SQL', 'API', 'JSON', 'Python',
+                'push()', 'map()', 'filter()', 'split()', 'join()',
+                'SELECT', 'INSERT', 'UPDATE', 'DELETE'
+            ];
+            const keys = new Set(['if','else','for','while','function','class','var','let','const','return','import','export','await','async','new']);
+            const vars = new Set(['userName','data','result','count','value','status']);
+
+            function make() {
+                if (document.body.classList.contains("in-workspace")) return;
+                const el = document.createElement("div");
+                el.className = "float";
+                const t = items[Math.floor(Math.random() * items.length)];
+                el.textContent = t;
+                el.style.left = (Math.random() * 100) + "%";
+                el.style.animationDelay = (Math.random() * 18) + "s";
+                el.style.fontSize = (Math.random() * 12 + 16) + "px";
+                if (/^[01]+$/.test(t))                                  el.classList.add("b-bin");
+                else if (/^\d+$/.test(t))                               el.classList.add("b-num");
+                else if (['{','}','[',']','(',')','<','>'].includes(t))  el.classList.add("b-brk");
+                else if (keys.has(t))                                   el.classList.add("b-key");
+                else if (vars.has(t))                                   el.classList.add("b-var");
+                else                                                    el.classList.add("b-sym");
+                bg.appendChild(el);
+                setTimeout(() => el.remove(), 42000);
+            }
+            setInterval(make, 800);
+            for (let i = 0; i < 6; i++) setTimeout(make, i * 400);
+        }
+    </script>
+</body>
+</html>

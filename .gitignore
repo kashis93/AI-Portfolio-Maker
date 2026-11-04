@@ -1,0 +1,9 @@
+.env
+__pycache__/
+*.pyc
+venv/
+env/
+.DS_Store
+Here's_Your_Portfolio_Duh/
+CV_EXTRACTED_INFO.txt
+Extracted_Info.json
